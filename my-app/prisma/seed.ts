@@ -4,7 +4,7 @@ const prisma = new PrismaClient();
 
 const userData: Prisma.UserCreateInput[] = [
   {
-    name: "Alice",
+    name: "alimaa",
     email: "alice@prisma.io",
     posts: {
       create: [
@@ -21,8 +21,8 @@ const userData: Prisma.UserCreateInput[] = [
     },
   },
   {
-    name: "Beb",
-    email: "beb@prisma.io",
+    name: "suldee",
+    email: "bob@prisma.io",
     posts: {
       create: [
         {
@@ -33,21 +33,6 @@ const userData: Prisma.UserCreateInput[] = [
       ],
     },
   },
-   {
-    name: "Bab",
-    email: "bab@prisma.io",
-    posts: {
-      create: [
-        {
-          title: "Follow Prisma on Twitter",
-          content: "https://www.twitter.com/prisma",
-          published: true,
-        },
-      ],
-    },
-  },
-
- 
 ];
 
 export async function main() {
