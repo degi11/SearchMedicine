@@ -2,43 +2,33 @@ import { PrismaClient, Prisma } from "../app/generated/prisma";
 
 const prisma = new PrismaClient();
 
-const userData: Prisma.UserCreateInput[] = [
+const medicineData: Prisma.MedicineCreateInput[] = [
   {
-    name: "alimaa",
-    email: "alice@prisma.io",
-    posts: {
-      create: [
-        {
-          title: "Join the Prisma Discord",
-          content: "https://pris.ly/discord",
-          published: true,
-        },
-        {
-          title: "Prisma on YouTube",
-          content: "https://pris.ly/youtube",
-        },
-      ],
-    },
-  },
-  {
-    name: "suldee",
-    email: "bob@prisma.io",
-    posts: {
-      create: [
-        {
-          title: "Follow Prisma on Twitter",
-          content: "https://www.twitter.com/prisma",
-          published: true,
-        },
-      ],
-    },
+    tradeName: "Полиоксидоний",
+    barcode: 4607035393655,
+    internationalName: "Азоксимерын бромид",
+    dosage: "6 mg",
+    no: 5,
+    dosageForm: "тарилгын уусмал бэлтгэх лиофилизат",
+    conditionsOfIssue: true,
+    country: "ОХУ",
   },
 ];
 
 export async function main() {
-  for (const u of userData) {
-    await prisma.user.create({ data: u });
+  for (const m of medicineData) {
+    await prisma.medicine.create({
+      data: m,
+    });
   }
 }
 
-main();
+main()
+  .then(async () => {
+    await prisma.$disconnect();
+  })
+  .catch(async (e) => {
+    console.error(e);
+    await prisma.$disconnect();
+    process.exit(1);
+  });
