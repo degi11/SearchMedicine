@@ -9,14 +9,23 @@ datasource db {
 }
 
 model Medicine {
-  id                String   @id @default(uuid())
-  tradeName         String
-  barcode           BigInt?
-  internationalName String?
-  dosage            String?
-  no                Int?
-  dosageForm        String?
-  conditionsOfIssue Boolean?
-  country           String?
-  createdAt         DateTime @default(now())
+  id                             String   @id @default(uuid())
+  tradeNameMN                    String?
+  tradeNameEN                    String?
+  barcode                        BigInt?  @unique
+  internationalName              String?
+  dosage                         String?
+  no                             Int?
+  dosageForm                     String?
+  conditionsOfIssue              Boolean?
+  country                        String?
+  createdAt                      DateTime @default(now())
+  registered                     String?
+  indicationsForUse              String?
+  prohibitionsPrecautions        Json?
+  sideEffects                    String?
+  interactionWithOtherDrugs      Json?
+  useDuringPregnancyAndLactation String?
+  adult                          Json?
+  child                          Json?
 }
