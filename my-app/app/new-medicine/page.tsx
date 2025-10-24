@@ -1,6 +1,13 @@
 "use client";
 
-import { NewMedicineCreateInputTextArrey, NewMedicineCreateTextareaArrey } from "@/ascents/constans";
+import {
+  NewMedicineCreateInputTextArrey,
+  NewMedicineCreateTextareaArrey,
+} from "@/ascents/constans";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { CircleMinus, PlusCircle } from "lucide-react";
 import { useState } from "react";
 
 export default function NewMedicinePage() {
@@ -28,19 +35,30 @@ export default function NewMedicinePage() {
 
   const [children, setChildren] = useState([{ age: "", dose: "", time: "" }]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleChildChange = (index: number, field: string, value: string) => {
     const updated = [...children];
-    updated[index][field as keyof typeof updated[number]] = value;
+    updated[index][field as keyof (typeof updated)[number]] = value;
     setChildren(updated);
   };
 
   const addChild = () => {
     setChildren([...children, { age: "", dose: "", time: "" }]);
   };
+  const removeChildDose = (index: number) => {
+        const updated = [...children];
+        updated.splice(index, 1);
+        setChildren(
+          updated.length ? updated : [{ age: "", dose: "", time: "" }]
+        );
+      };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,6 +106,7 @@ export default function NewMedicinePage() {
         }),
       });
 
+
       if (!res.ok) {
         const err = await res.json();
         alert("Алдаа гарлаа: " + err.error);
@@ -128,7 +147,7 @@ export default function NewMedicinePage() {
 
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
         {NewMedicineCreateInputTextArrey.map((el, index) => (
-          <input
+          <Input
             key={index}
             name={el.name}
             type={el.type || "text"}
@@ -152,7 +171,7 @@ export default function NewMedicinePage() {
         </select>
 
         {NewMedicineCreateTextareaArrey.map((el, index) => (
-          <textarea
+          <Textarea
             key={index}
             name={el.name}
             placeholder={el.placeholder}
@@ -164,15 +183,15 @@ export default function NewMedicinePage() {
         ))}
 
         <div className="col-span-2 grid grid-cols-2 gap-2">
-          <input
+          <Input
             name="adultDose"
             placeholder="Насанд хүрэгчдийн тун"
             value={form.adultDose}
             onChange={handleChange}
             required
-            className="border p-2"
+          
           />
-          <input
+          <Input
             name="adultTime"
             placeholder="Насанд хүрэгчдийн хэрэглэх хугацаа"
             value={form.adultTime}
@@ -185,45 +204,61 @@ export default function NewMedicinePage() {
         <div className="col-span-2 border p-3 rounded">
           <h2 className="font-semibold mb-2">Хүүхдийн тунгийн мэдээлэл</h2>
           {children.map((child, index) => (
-            <div key={index} className="grid grid-cols-3 gap-2 mb-2">
-              <input
+            <div key={index} className="grid grid-cols-4 gap-2 mb-2">
+              <Input
                 placeholder="Нас"
                 value={child.age}
-                onChange={(e) => handleChildChange(index, "age", e.target.value)}
-                className="border p-2"
+                onChange={(e) =>
+                  handleChildChange(index, "age", e.target.value)
+                }
                 required
               />
-              <input
+              <Input
                 placeholder="Тун"
                 value={child.dose}
-                onChange={(e) => handleChildChange(index, "dose", e.target.value)}
+                onChange={(e) =>
+                  handleChildChange(index, "dose", e.target.value)
+                }
                 className="border p-2"
                 required
               />
-              <input
+              <Input
                 placeholder="Хугацаа"
                 value={child.time}
-                onChange={(e) => handleChildChange(index, "time", e.target.value)}
+                onChange={(e) =>
+                  handleChildChange(index, "time", e.target.value)
+                }
                 className="border p-2"
                 required
               />
+              <div>
+                <Button
+                type="button"
+                onClick={() => removeChildDose(index)}
+                className="px-2 py-1 rounded col-span-3"
+              >
+              <CircleMinus/>
+              </Button>
+              </div>
+
+              
             </div>
           ))}
-          <button
+          <Button
             type="button"
             onClick={addChild}
-            className="bg-green-500 text-white px-3 py-1 rounded"
+            className="px-3 py-1 rounded"
           >
-            Хүүхдийн тун нэмэх
-          </button>
+            <PlusCircle/>
+          </Button>
         </div>
 
-        <button
+        <Button
           type="submit"
-          className="col-span-2 bg-blue-600 text-white py-2 rounded"
+          className="col-span-2 bg-blue-600 text-white py-2 rounded h-12"
         >
           Эм нэмэх
-        </button>
+        </Button>
       </form>
     </div>
   );
