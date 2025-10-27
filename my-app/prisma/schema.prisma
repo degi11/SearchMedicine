@@ -28,4 +28,5 @@ model Medicine {
   useDuringPregnancyAndLactation String?
   adult                          Json?
   child                          Json?
+  image                          String?
 }

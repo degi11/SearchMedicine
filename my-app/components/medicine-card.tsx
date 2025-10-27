@@ -33,13 +33,13 @@ export default function MedicineCard({
       <p className="font-medium text-sm sm:text-base">{dosageForm ? truncate(dosageForm, 10) : "N/A"}</p>
       <Link
         href={`category/country/${country}`}
-        className="text-blue-700 hover:text-red-600 text-sm sm:text-base"
+        className=" hover:text-blue-700 text-sm sm:text-base"
       >
         {country ? truncate(country, 10) : "N/A"}
       </Link>
       <Link
         href={`category/registered/${registered}`}
-        className="text-blue-700 hover:text-red-600 text-sm sm:text-base"
+        className="hover:text-blue-700 text-sm sm:text-base"
       >
         {registered ? truncate(registered, 10) : "N/A"}
       </Link>

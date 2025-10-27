@@ -7,7 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { CircleMinus, PlusCircle } from "lucide-react";
+import { CircleMinus, PlusCircle, Image as ImageIcon } from "lucide-react";
 import { useState } from "react";
 
 export default function NewMedicinePage() {
@@ -33,6 +33,8 @@ export default function NewMedicinePage() {
     adultTime: "",
   });
 
+  const [url, setUrl] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [children, setChildren] = useState([{ age: "", dose: "", time: "" }]);
 
   const handleChange = (
@@ -58,14 +60,43 @@ export default function NewMedicinePage() {
     setChildren(updated.length ? updated : [{ age: "", dose: "", time: "" }]);
   };
 
+const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
+const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+
+    const data = new FormData();
+    data.append("file", file);
+    data.append("upload_preset", UPLOAD_PRESET);
+    data.append("cloud_name", CLOUD_NAME);
+
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+        { method: "POST", body: data }
+      );
+      const uploaded = await res.json();
+      setUrl(uploaded.secure_url);
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Зураг илгээхэд алдаа гарлаа.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (
       Object.values(form).some((v) => v === "") ||
-      children.some((c) => Object.values(c).some((v) => v === ""))
+      children.some((c) => Object.values(c).some((v) => v === "")) ||
+      !url
     ) {
-      alert("Бүх талбарыг бөглөнө үү!");
+      alert("Бүх талбарыг бөглөж, зураг оруулна уу!");
       return;
     }
 
@@ -75,6 +106,7 @@ export default function NewMedicinePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
+          image: url,
           no: parseInt(form.no),
           barcode: form.barcode ? BigInt(form.barcode).toString() : null,
           conditionsOfIssue: form.conditionsOfIssue === "true",
@@ -131,6 +163,7 @@ export default function NewMedicinePage() {
           adultTime: "",
         });
         setChildren([{ age: "", dose: "", time: "" }]);
+        setUrl(null);
       }
     } catch (err) {
       console.error("Error creating medicine:", err);
@@ -143,6 +176,26 @@ export default function NewMedicinePage() {
       <h1 className="text-2xl font-bold mb-4">Шинэ эм бүртгэх</h1>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
+        <div className="col-span-2 border p-3 rounded-md">
+          <label className="font-semibold mb-2 flex items-center gap-2">
+            <ImageIcon className="w-5 h-5" /> Эмийн зураг:
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="mt-2"
+          />
+          {uploading && <p className="text-blue-500 mt-1">Uploading...</p>}
+          {url && (
+            <img
+              src={url}
+              alt="Medicine"
+              className="mt-3 w-40 h-40 object-cover rounded-md border"
+            />
+          )}
+        </div>
+
         {NewMedicineCreateInputTextArrey.map((el, index) => (
           <Input
             key={index}
