@@ -1,15 +1,9 @@
-import Search from "@/component/search";
-import prisma from "@/lib/prisma";
-
+import HomeCards from "@/components/home-cards";
 
 export default async function Home() {
-    const Medicine = await prisma.medicine.findMany()
   return (
-    <div className="flex items-center justify-center">
-      <Search />
-      {Medicine.map((el, id) => (
-        <div key={id}>{el.id}</div>
-      ))}
+    <div className="flex items-center justify-center h-screen max:w-7xl">
+      <HomeCards/>
     </div>
   );
 }

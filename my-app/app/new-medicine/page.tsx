@@ -53,12 +53,10 @@ export default function NewMedicinePage() {
     setChildren([...children, { age: "", dose: "", time: "" }]);
   };
   const removeChildDose = (index: number) => {
-        const updated = [...children];
-        updated.splice(index, 1);
-        setChildren(
-          updated.length ? updated : [{ age: "", dose: "", time: "" }]
-        );
-      };
+    const updated = [...children];
+    updated.splice(index, 1);
+    setChildren(updated.length ? updated : [{ age: "", dose: "", time: "" }]);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,7 +103,6 @@ export default function NewMedicinePage() {
           })),
         }),
       });
-
 
       if (!res.ok) {
         const err = await res.json();
@@ -189,7 +186,6 @@ export default function NewMedicinePage() {
             value={form.adultDose}
             onChange={handleChange}
             required
-          
           />
           <Input
             name="adultTime"
@@ -233,15 +229,13 @@ export default function NewMedicinePage() {
               />
               <div>
                 <Button
-                type="button"
-                onClick={() => removeChildDose(index)}
-                className="px-2 py-1 rounded col-span-3"
-              >
-              <CircleMinus/>
-              </Button>
+                  type="button"
+                  onClick={() => removeChildDose(index)}
+                  className="px-2 py-1 rounded col-span-3"
+                >
+                  <CircleMinus />
+                </Button>
               </div>
-
-              
             </div>
           ))}
           <Button
@@ -249,7 +243,7 @@ export default function NewMedicinePage() {
             onClick={addChild}
             className="px-3 py-1 rounded"
           >
-            <PlusCircle/>
+            <PlusCircle />
           </Button>
         </div>
 
