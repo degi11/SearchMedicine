@@ -63,30 +63,43 @@ export default function NewMedicinePage() {
 const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
 const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploading(true);
+const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
 
-    const data = new FormData();
-    data.append("file", file);
-    data.append("upload_preset", UPLOAD_PRESET);
-    data.append("cloud_name", CLOUD_NAME);
+  setUploading(true);
 
-    try {
-      const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-        { method: "POST", body: data }
-      );
-      const uploaded = await res.json();
-      setUrl(uploaded.secure_url);
-    } catch (err) {
-      console.error("Upload error:", err);
-      alert("Зураг илгээхэд алдаа гарлаа.");
-    } finally {
-      setUploading(false);
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+
+
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error("Cloudinary upload failed:", data);
+      throw new Error(data.error?.message || "Upload failed");
     }
-  };
+
+    console.log("Uploaded image:", data.secure_url);
+    setUrl(data.secure_url);
+  } catch (err) {
+    console.error("Upload error:", err);
+    alert("Зураг илгээхэд алдаа гарлаа.");
+  } finally {
+    setUploading(false);
+  }
+};
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -37,6 +37,7 @@ export async function POST(req: Request) {
           typeof data.child === "string"
             ? JSON.parse(data.child)
             : data.child || null,
+        image: data.image,
       },
     });
 

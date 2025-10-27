@@ -34,6 +34,7 @@ const medicineData: Prisma.MedicineCreateInput[] = [
       { age: "1-6 настайд", dose: "120-240 мг", time: "4"},
       { age: "6-12 настайд", dose: "240 мг", time: "4"}      
     ],
+    image: "https://res.cloudinary.com/dqrd7tpyd/image/upload/v1761550263/sjh2w1xmfdorcgw8hrxp.jpg"
   },
 ];
 

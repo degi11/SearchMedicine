@@ -5,4 +5,5 @@ export interface MedicineCardProrps {
   dosageForm: string | null;
   registered: string | null;
   country: string | null;
+  image: string | null;
 }

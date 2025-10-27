@@ -5,7 +5,7 @@ export default async function HomeCards() {
   const Medicine = await prisma.medicine.findMany();
   return (
     <div className="w-7xl h-screen mt-25">
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 px-4 md:px-8">
+      <div className="px-4 md:px-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 auto-rows-[320px] lg:auto-rows-[380px]">
         {Medicine.map((el) => (
           <MedicineCard
             key={el.id}
@@ -15,6 +15,7 @@ export default async function HomeCards() {
             dosageForm={el.dosageForm}
             registered={el.registered}
             country={el.country}
+            image={el.image}
           />
         ))}
       </div>
