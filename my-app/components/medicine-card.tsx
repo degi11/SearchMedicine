@@ -32,11 +32,11 @@ export default function MedicineCard({
         )}
       </div>
       <div className="flex flex-col md:flex-row md:justify-between">
-        <h1 className="font-bold text-base sm:text-lg">{medicineName ? truncate(medicineName, 12) : "N/A"}</h1>
+        <h1 className="font-bold text-base sm:text-lg line-clamp-1 sm:line-clamp-2">{medicineName}</h1>
         <p className="font-bold text-sm sm:text-base">№{no}</p>
       </div>
-      <p className="font-medium text-sm sm:text-base">{dosage ? truncate(dosage, 12) : "N/A"}</p>
-      <p className="font-medium text-sm sm:text-base">{dosageForm ? truncate(dosageForm, 12) : "N/A"}</p>
+      <p className="font-medium text-sm sm:text-base line-clamp-1">{dosage}</p>
+      <p className="font-medium text-sm sm:text-base line-clamp-1">{dosageForm}</p>
       <Link
         href={`category/country/${country}`}
         className=" hover:text-blue-700 text-sm sm:text-base"
@@ -45,9 +45,9 @@ export default function MedicineCard({
       </Link>
       <Link
         href={`category/registered/${registered}`}
-        className="hover:text-blue-700 text-sm sm:text-base"
+        className="hover:text-blue-700 text-sm sm:text-base line-clamp-1 "
       >
-        {registered ? truncate(registered, 10) : "N/A"}
+        {registered}
       </Link>
     </div>
   );

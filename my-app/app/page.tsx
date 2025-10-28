@@ -1,9 +1,10 @@
 import HomeCards from "@/components/home-cards";
+import Search from "@/components/search";
 
 export default async function Home() {
   return (
-    <div className="flex items-center justify-center h-screen max:w-7xl">
-      <HomeCards/>
+    <div className="flex justify-center h-screen w-full">
+      <Search />
     </div>
   );
 }
