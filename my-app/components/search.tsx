@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import MedicineCard from "./medicine-card";
+import { Spinner } from "./ui/spinner";
 
 export default function Search() {
   const [name, setName] = useState("");
@@ -20,7 +21,9 @@ export default function Search() {
         if (q) params.set("q", q);
         if (bc) params.set("barcode", bc);
 
-        const res = await fetch(`/api/medicine/search-medicine?${params.toString()}`);
+        const res = await fetch(
+          `/api/medicine/search-medicine?${params.toString()}`
+        );
         if (!res.ok) throw new Error("Failed to search");
 
         const data = await res.json();
@@ -31,7 +34,7 @@ export default function Search() {
       } finally {
         setLoading(false);
       }
-    }, 300); // debounce
+    }, 500);
   };
 
   useEffect(() => {
@@ -43,39 +46,44 @@ export default function Search() {
   }, [name, barcode]);
 
   return (
-    <div className="max-w-7xl mx-auto mt-8 p-4">
-      <form className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="md:col-span-2">
+    <div className="w-7xl mx-auto mt-8 p-4">
+      <form className="grid grid-rows-2 md:grid-cols-2 lg:grid-cols-2 gap-4">
+        <div className="">
           <Input
             placeholder="Эмийн нэр (MN/EN)"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="h-12 border-black"
+            className="h-12 border-black shadow-md"
           />
         </div>
-        <div>
+        <div className="flex">
           <Input
             placeholder="Barcode"
             value={barcode}
             onChange={(e) => setBarcode(e.target.value)}
-            className="h-12 border-black"
+            className="h-12 border-black shadow-md"
           />
         </div>
       </form>
 
-      {loading && <p className="mt-4 text-gray-500">Хайж байна...</p>}
+      {loading && (
+        <div className="flex items-center gap-1">
+          <Spinner />
+          <p className="text-gray-500">Хайж байна...</p>
+        </div>
+      )}
 
       <div className="mt-8 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {results.map((med) => (
+        {results.map((el) => (
           <MedicineCard
-            key={med.id}
-            medicineName={med.tradeNameMN || med.tradeNameEN || "Нэргүй"}
-            dosage={med.dosage || ""}
-            no={med.no || ""}
-            dosageForm={med.dosageForm || ""}
-            registered={med.registered || ""}
-            country={med.country || ""}
-            image={med.image || null}
+            key={el.id}
+            medicineName={el.tradeNameMN || el.tradeNameEN || "Нэргүй"}
+            dosage={el.dosage || ""}
+            no={el.no || ""}
+            dosageForm={el.dosageForm || ""}
+            registered={el.registered || ""}
+            country={el.country || ""}
+            image={el.image || null}
           />
         ))}
       </div>

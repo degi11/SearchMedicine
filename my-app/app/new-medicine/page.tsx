@@ -60,46 +60,44 @@ export default function NewMedicinePage() {
     setChildren(updated.length ? updated : [{ age: "", dose: "", time: "" }]);
   };
 
-const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
-const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
+  const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
+  const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
 
-const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if (!file) return;
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  setUploading(true);
+    setUploading(true);
 
-  try {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", UPLOAD_PRESET);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", UPLOAD_PRESET);
 
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
-    const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-      {
-        method: "POST",
-        body: formData,
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("Cloudinary upload failed:", data);
+        throw new Error(data.error?.message || "Upload failed");
       }
-    );
 
-    const data = await res.json();
-
-    if (!res.ok) {
-      console.error("Cloudinary upload failed:", data);
-      throw new Error(data.error?.message || "Upload failed");
+      console.log("Uploaded image:", data.secure_url);
+      setUrl(data.secure_url);
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Зураг илгээхэд алдаа гарлаа.");
+    } finally {
+      setUploading(false);
     }
-
-    console.log("Uploaded image:", data.secure_url);
-    setUrl(data.secure_url);
-  } catch (err) {
-    console.error("Upload error:", err);
-    alert("Зураг илгээхэд алдаа гарлаа.");
-  } finally {
-    setUploading(false);
-  }
-};
-
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -189,7 +187,7 @@ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
       <h1 className="text-2xl font-bold mb-4">Шинэ эм бүртгэх</h1>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-4">
-        <div className="col-span-2 border p-3 rounded-md">
+        <div className="col-span-2 border p-3 rounded-md border-black">
           <label className="font-semibold mb-2 flex items-center gap-2">
             <ImageIcon className="w-5 h-5" /> Эмийн зураг:
           </label>
@@ -218,7 +216,7 @@ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
             value={form[el.name as keyof typeof form]}
             onChange={handleChange}
             required
-            className="border p-2"
+            className="border-black p-2 h-[41px]"
           />
         ))}
 
@@ -227,13 +225,14 @@ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
           value={form.conditionsOfIssue}
           onChange={handleChange}
           required
-          className="border p-2"
+          className=" border border-black rounded-sm p-2"
         >
           <option value="false">Жоргүй</option>
           <option value="true">Жортой</option>
         </select>
 
         {NewMedicineCreateTextareaArrey.map((el, index) => (
+          
           <Textarea
             key={index}
             name={el.name}
@@ -241,7 +240,7 @@ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
             value={form[el.name as keyof typeof form]}
             onChange={handleChange}
             required
-            className="border p-2 col-span-2"
+            className="border-black p-2 col-span-2"
           />
         ))}
 
@@ -252,6 +251,7 @@ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
             value={form.adultDose}
             onChange={handleChange}
             required
+            className="border-black h-[41px]"
           />
           <Input
             name="adultTime"
@@ -259,14 +259,14 @@ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
             value={form.adultTime}
             onChange={handleChange}
             required
-            className="border p-2"
+            className="border-black p-2 h-[41px]"
           />
         </div>
 
-        <div className="col-span-2 border p-3 rounded">
+        <div className="col-span-2 border p-3 rounded-sm border-black">
           <h2 className="font-semibold mb-2">Хүүхдийн тунгийн мэдээлэл</h2>
           {children.map((child, index) => (
-            <div key={index} className="grid grid-cols-4 gap-2 mb-2">
+            <div key={index} className="grid grid-cols-4 gap-2 mb-2 ">
               <Input
                 placeholder="Нас"
                 value={child.age}
@@ -274,6 +274,7 @@ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
                   handleChildChange(index, "age", e.target.value)
                 }
                 required
+                className="border-black"
               />
               <Input
                 placeholder="Тун"
@@ -281,7 +282,7 @@ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
                 onChange={(e) =>
                   handleChildChange(index, "dose", e.target.value)
                 }
-                className="border p-2"
+                className="border-black p-2"
                 required
               />
               <Input
@@ -290,7 +291,7 @@ const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
                 onChange={(e) =>
                   handleChildChange(index, "time", e.target.value)
                 }
-                className="border p-2"
+                className="border-black p-2"
                 required
               />
               <div>
