@@ -22,7 +22,7 @@ export default function Search() {
         if (bc) params.set("barcode", bc);
 
         const res = await fetch(
-          `/api/medicine/search-medicine?${params.toString()}`
+          `/api/search-medicine?${params.toString()}`
         );
         if (!res.ok) throw new Error("Failed to search");
 
