@@ -1,61 +1,65 @@
 "use client";
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
-import { routerServerGlobal } from "next/dist/server/lib/router-utils/router-server-context";
+import { useAuth } from "@/context/auth-context";
 
-export function Login() {
-  const [email, setEmail] = useState("");
+export default function Login() {
+const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const route = useRouter();
+  const router = useRouter();
+  const { loginWithToken } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setError("");
-    setSuccess("");
-    setLoading(true);
 
     try {
-      const res = await fetch("/api/login-admin", {
+      const res = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Login failed");
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error("Invalid JSON response");
       }
 
-      setSuccess("Logged in successfully");
-      console.log("Token:", data.token);
+      if (!res.ok) {
+        setError(data.message || "Login failed");
+        return;
+      }
 
-      localStorage.setItem("token", data.token);
-      window.dispatchEvent(new Event("storage"));
+      loginWithToken(data.token);
 
-      route.push("/");
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
+
+      setTimeout(() => {
+        if (data.role === "admin") {
+          router.push("/admin");
+        } else {
+          router.push("/");
+        }
+      }, 50);
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Server error");
     }
   };
-
+  
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
@@ -64,13 +68,11 @@ export function Login() {
           Enter your email and password to login
         </CardDescription>
       </CardHeader>
-
       <CardContent>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+        <form onSubmit={handleLogin} className="flex flex-col gap-6">
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input
-              id="email"
               type="email"
               placeholder="email"
               required
@@ -78,19 +80,9 @@ export function Login() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-
           <div className="grid gap-2">
-            <div className="flex items-center">
-              <Label htmlFor="password">Password</Label>
-              <a
-                href="#"
-                className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-              >
-                Forgot your password?
-              </a>
-            </div>
+            <Label htmlFor="password">Password</Label>
             <Input
-              id="password"
               type="password"
               placeholder="password"
               required
@@ -98,16 +90,10 @@ export function Login() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-
           {error && <p className="text-red-500 text-sm">{error}</p>}
-          {success && <p className="text-green-600 text-sm">{success}</p>}
 
-          <Button
-            type="submit"
-            className="w-full bg-[#00AC94]"
-            disabled={loading}
-          >
-            {loading ? "Logging in..." : "Login"}
+          <Button type="submit" className="w-full bg-[#00AC94]">
+            login
           </Button>
         </form>
       </CardContent>

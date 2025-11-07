@@ -1,26 +1,44 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { cookies } from "next/headers";
+import jwt from "jsonwebtoken";
 
-const ADMIN_SECRET = process.env.ADMIN_SECRET || "super-secret-key";
-
-function isAdmin() {
-  const cookieStore = cookies();
-  const token = cookieStore.get("adminToken")?.value;
-  return token === ADMIN_SECRET;
-}
+const JWT_SECRET = process.env.JWT_SECRET!;
 
 export async function POST(req: Request) {
-  if (!isAdmin())
-    return NextResponse.json({ error: "Зөвхөн админ хандаж болно!" }, { status: 403 });
-
   try {
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, JWT_SECRET) as { role?: string };
+    if (decoded.role !== "ADMIN") {
+      return NextResponse.json(
+        { error: "Зөвхөн админ хандаж болно!" },
+        { status: 403 }
+      );
+    }
+
     const data = await req.json();
+
+    if (data.barcode) {
+      const existing = await prisma.medicine.findUnique({
+        where: { barcode: Number(data.barcode) },
+      });
+      if (existing) {
+        return NextResponse.json(
+          { error: "Энэ barcode аль хэдийн орсон байна" },
+          { status: 400 }
+        );
+      }
+    }
+
     const medicine = await prisma.medicine.create({
       data: {
         tradeNameMN: data.tradeNameMN,
         tradeNameEN: data.tradeNameEN,
-        barcode: data.barcode ? BigInt(data.barcode) : null,
+        barcode: data.barcode ? Number(data.barcode) : null,
         internationalName: data.internationalName,
         dosage: data.dosage,
         no: data.no ? Number(data.no) : null,
@@ -39,51 +57,19 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json(medicine);
+    const safeMedicine = {
+      ...medicine,
+      barcode: medicine.barcode?.toString(),
+    };
+
+    return NextResponse.json(safeMedicine);
   } catch (err) {
-    console.error(err);
-    return NextResponse.json({ error: "Эм үүсгэхэд алдаа гарлаа" }, { status: 500 });
-  }
-}
-
-export async function PUT(req: Request) {
-  if (!isAdmin())
-    return NextResponse.json({ error: "Зөвхөн админ хандаж болно!" }, { status: 403 });
-
-  try {
-    const data = await req.json();
-
-    if (!data.id) {
-      return NextResponse.json({ error: "id байхгүй байна" }, { status: 400 });
-    }
-
-    const updated = await prisma.medicine.update({
-      where: { id: data.id },
-      data: { ...data },
-    });
-
-    return NextResponse.json(updated);
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json({ error: "Эм шинэчлэхэд алдаа гарлаа" }, { status: 500 });
-  }
-}
-
-export async function DELETE(req: Request) {
-  if (!isAdmin())
-    return NextResponse.json({ error: "Зөвхөн админ хандаж болно!" }, { status: 403 });
-
-  try {
-    const { id } = await req.json();
-
-    if (!id) {
-      return NextResponse.json({ error: "id байхгүй байна" }, { status: 400 });
-    }
-
-    await prisma.medicine.delete({ where: { id } });
-    return NextResponse.json({ message: "Эм устгалаа" });
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json({ error: "Эм устгахад алдаа гарлаа" }, { status: 500 });
+    console.error("Medicine create error:", err);
+    return NextResponse.json(
+      {
+        error: err instanceof Error ? err.message : "Эм үүсгэхэд алдаа гарлаа",
+      },
+      { status: 500 }
+    );
   }
 }

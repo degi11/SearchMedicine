@@ -21,9 +21,7 @@ export default function Search() {
         if (q) params.set("q", q);
         if (bc) params.set("barcode", bc);
 
-        const res = await fetch(
-          `/api/search-medicine?${params.toString()}`
-        );
+        const res = await fetch(`/api/search-medicine?${params.toString()}`);
         if (!res.ok) throw new Error("Failed to search");
 
         const data = await res.json();
