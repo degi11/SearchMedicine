@@ -30,9 +30,9 @@ const medicineData: Prisma.MedicineCreateInput[] = [
       { dose: "500 мг", time: "4" }
     ],
     child: [
-      { age: "3 сартайгаас 1 нас хүртэл", dose: "24 мг- 120 мг", time: "4"},
-      { age: "1-6 настайд", dose: "120-240 мг", time: "4"},
-      { age: "6-12 настайд", dose: "240 мг", time: "4"}      
+      { age: "3 сартайгаас 1 нас хүртэл", dose: "24 - 120 мг", time: "4"},
+      { age: "1 - 6 настайд", dose: "120 - 240мг", time: "4"},
+      { age: "6 - 12 настайд", dose: "240мг", time: "4"}      
     ],
     image: "https://res.cloudinary.com/dqrd7tpyd/image/upload/v1761550263/sjh2w1xmfdorcgw8hrxp.jpg"
   },

@@ -1,54 +1,65 @@
+"use client";
 import { MedicineCardProrps } from "@/types";
+import { ImageOff } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-
+import { useRouter } from "next/navigation";
 
 export default function MedicineCard({
   medicineName,
   dosage,
   no,
+  conditionsOfIssue,
   dosageForm,
   registered,
   country,
+  id,
   image,
 }: MedicineCardProrps) {
-
-  const truncate = (text: string, length: number) =>
-    text.length > length ? text.slice(0, length) + "..." : text;
+  const router = useRouter();
 
   return (
-    <div className="flex flex-col bg-white border border-black p-3 lg:p-5 rounded-2xl w-full h-auto ">
-      <div className="relative h-48 overflow-hidden rounded-md flex items-center justify-center">
+    <div
+      onClick={() => router.push(`/medicine/${id}`)}
+      className="flex flex-col rounded-2xl w-full h-auto bg-white overflow-hidden shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-100 hover:border-green-200 group"
+    >
+      <div className="relative h-48 overflow-hidden bg-linear-to-br from-green-50 to-blue-50">
         {image ? (
           <Image
             src={image}
             alt={medicineName || "Medicine image"}
             width={250}
             height={250}
-            className="object-cover w-full h-full rounded-xl"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         ) : (
-          <span className="text-gray-400 text-sm">Зураг байхгүй</span>
+          <div className="w-full h-full flex items-center justify-center">
+            <ImageOff className="text-green-200" size={60} />
+          </div>
         )}
+        <div className="absolute top-3 right-3 bg-white rounded-lg px-2 shadow-md">
+          {conditionsOfIssue ? (
+            <span className="text-sm font-semibold text-green-600">Жортой</span>
+          ) : (
+            <span className="text-sm font-semibold text-green-600">Жоргүй</span>
+          )}
+        </div>
       </div>
-      <div className="flex flex-col md:flex-row md:justify-between">
-        <h1 className="font-bold text-base sm:text-lg line-clamp-1 sm:line-clamp-2">{medicineName}</h1>
-        <p className="font-bold text-sm sm:text-base">№{no}</p>
+      <div className="p-3">
+        <div className="flex flex-col md:flex-row md:justify-between ">
+          <h1 className="font-bold text-base sm:text-lg line-clamp-1 sm:line-clamp-2 transition-all duration-200 group-hover:text-[#00AC94]">
+            {medicineName}
+          </h1>
+          <p className="font-bold text-sm sm:text-base">№{no}</p>
+        </div>
+        <p className="font-medium text-sm sm:text-base line-clamp-1">
+          {dosage}
+        </p>
+        <p className="font-medium text-sm sm:text-base line-clamp-1">
+          {dosageForm}
+        </p>
+        <div className="text-sm sm:text-base line-clamp-1">{country}</div>
+        <div className="text-sm sm:text-base line-clamp-1 ">{registered}</div>
       </div>
-      <p className="font-medium text-sm sm:text-base line-clamp-1">{dosage}</p>
-      <p className="font-medium text-sm sm:text-base line-clamp-1">{dosageForm}</p>
-      <Link
-        href={`category/country/${country}`}
-        className=" hover:text-blue-700 text-sm sm:text-base"
-      >
-        {country ? truncate(country, 12) : "N/A"}
-      </Link>
-      <Link
-        href={`category/registered/${registered}`}
-        className="hover:text-blue-700 text-sm sm:text-base line-clamp-1 "
-      >
-        {registered}
-      </Link>
     </div>
   );
 }

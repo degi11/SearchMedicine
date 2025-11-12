@@ -7,7 +7,7 @@ export const NewMedicineCreateInputTextArrey = [
     {
         name: "tradeNameEN",
         placeholder: "Англи нэр",
-       
+        
     },
     {
         name: "barcode",

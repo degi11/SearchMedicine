@@ -53,7 +53,7 @@ export default function Navbar() {
     <header className="w-full bg-white">
       <div className="w-full shadow-lg border-b-grey-500 border">
         <div className="flex justify-center px-4 sm:px-6 lg:px-8 py-6 items-center">
-          <div className="flex gap-3 w-full justify-center-safe">
+          <div onClick={() => router.push('/')} className="flex gap-3 w-full justify-center-safe cursor-pointer">
             <div className="flex items-center justify-center w-15 h-15 bg-[#00AC94] rounded-lg">
               <Search className="" size={32} />
             </div>

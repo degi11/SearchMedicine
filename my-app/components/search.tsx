@@ -71,10 +71,12 @@ export default function Search() {
         </div>
       )}
 
-      <div className="mt-8 grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {results.map((el) => (
           <MedicineCard
             key={el.id}
+            id={el.id}
+            conditionsOfIssue={el.conditionsOfIssue}
             medicineName={el.tradeNameMN || el.tradeNameEN || "Нэргүй"}
             dosage={el.dosage || ""}
             no={el.no || ""}

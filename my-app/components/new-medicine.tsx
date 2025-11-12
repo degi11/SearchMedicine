@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { CircleMinus, PlusCircle, Image as ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Spinner } from "./ui/spinner";
 
 export default function NewMedicine() {
   const [form, setForm] = useState({
@@ -95,17 +96,24 @@ export default function NewMedicine() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
 
-    if (
-      Object.values(form).some((v) => v === "") ||
-      children.some((c) => Object.values(c).some((v) => v === "")) ||
-      !url
-    ) {
-      alert("Бүх талбарыг бөглөж, зураг оруулна уу!");
-      return;
-    }
+  const requiredFields = [
+    "tradeNameMN",
+    "tradeNameEN",
+    "internationalName",
+    "dosage",
+    "dosageForm",
+    "country",
+  ];
+
+  const hasEmptyRequired = requiredFields.some((field) => !form[field as keyof typeof form]);
+
+  if (hasEmptyRequired || children.some((c) => Object.values(c).some((v) => v === "")) || !url) {
+    alert("Заавал бөглөх талбаруудыг бөглөж, зураг оруулна уу!");
+    return;
+  }
 
     try {
       const token = localStorage.getItem("token");
@@ -207,8 +215,12 @@ export default function NewMedicine() {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen text-xl">
-        Шалгаж байна...
+        <Button disabled size="sm">
+        <Spinner />
+        Checking...
+      </Button>
       </div>
+      
     );
   }
 
@@ -330,7 +342,7 @@ export default function NewMedicine() {
                 <Button
                   type="button"
                   onClick={() => removeChildDose(index)}
-                  className="px-2 py-1 rounded col-span-3"
+                  className="px-2 py-1 rounded col-span-3 bg-red-500"
                 >
                   <CircleMinus />
                 </Button>
@@ -340,7 +352,7 @@ export default function NewMedicine() {
           <Button
             type="button"
             onClick={addChild}
-            className="px-3 py-1 rounded"
+            className="px-3 py-1 rounded bg-green-500"
           >
             <PlusCircle />
           </Button>
