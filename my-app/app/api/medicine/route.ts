@@ -24,7 +24,7 @@ export async function POST(req: Request) {
 
     if (data.barcode) {
       const existing = await prisma.medicine.findUnique({
-        where: { barcode: Number(data.barcode) },
+        where: { barcode: String(data.barcode) },
       });
       if (existing) {
         return NextResponse.json(
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       data: {
         tradeNameMN: data.tradeNameMN,
         tradeNameEN: data.tradeNameEN,
-        barcode: data.barcode ? Number(data.barcode) : null,
+        barcode: data.barcode,
         internationalName: data.internationalName,
         dosage: data.dosage,
         no: data.no ? Number(data.no) : null,

@@ -5,12 +5,12 @@ const prisma = new PrismaClient();
 const medicineData: Prisma.MedicineCreateInput[] = [
   {
     tradeNameMN: "Парацетамол",
-    tradeNameEN: "paracetamol",
-    barcode: 8656898911205,
+    tradeNameEN: "Paracetamol",
+    barcode: "8656898911205",
     internationalName: "Парацетамол",
     dosage: "500мг",
     no: 10,
-    dosageForm: "шахмал",
+    dosageForm: "Шахмал",
     conditionsOfIssue: false,
     country: "Монгол",
     registered: "Ариун Монгол ХХК",
@@ -27,10 +27,10 @@ const medicineData: Prisma.MedicineCreateInput[] = [
     ],
     useDuringPregnancyAndLactation: "Хөхүүл ба жирэмсэн эхчүүдэд болгоомжтой хэрэглэнэ.",
     adult: [
-      { dose: "500 мг", time: "4" }
+      { dose: "500мг", time: "4" }
     ],
     child: [
-      { age: "3 сартайгаас 1 нас хүртэл", dose: "24 - 120 мг", time: "4"},
+      { age: "3 сартайгаас 1 нас хүртэл", dose: "24 - 120мг", time: "4"},
       { age: "1 - 6 настайд", dose: "120 - 240мг", time: "4"},
       { age: "6 - 12 настайд", dose: "240мг", time: "4"}      
     ],

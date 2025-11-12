@@ -12,7 +12,7 @@ model Medicine {
   id                             String   @id @default(uuid())
   tradeNameMN                    String?
   tradeNameEN                    String?
-  barcode                        BigInt?  @unique
+  barcode                        String?  @unique
   internationalName              String?
   dosage                         String?
   no                             Int?

@@ -8,13 +8,10 @@ export async function GET(req: Request) {
     const q = searchParams.get("q")?.trim();
     const barcodeParam = searchParams.get("barcode")?.trim();
 
-    let barcodeBigInt: bigint | undefined;
-    if (barcodeParam) {
-      try {
-        barcodeBigInt = BigInt(barcodeParam);
-      } catch {
-        barcodeBigInt = undefined; 
-      }
+    let barcodeString: string | undefined;
+
+    if (barcodeParam && barcodeParam !== "") {
+      barcodeString = barcodeParam;
     }
 
     const where: any = { OR: [] };
@@ -28,8 +25,8 @@ export async function GET(req: Request) {
       });
     }
 
-    if (barcodeBigInt) {
-      where.OR.push({ barcode: barcodeBigInt });
+    if (barcodeString) {
+      where.OR.push({ barcode: barcodeString });
     }
 
     if (!where.OR.length) return NextResponse.json([]);
