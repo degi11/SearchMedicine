@@ -11,6 +11,7 @@ import { CircleMinus, PlusCircle, Image as ImageIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Spinner } from "./ui/spinner";
+import { toast } from "sonner";
 
 export default function NewMedicine() {
   const [form, setForm] = useState({
@@ -90,7 +91,7 @@ export default function NewMedicine() {
       setUrl(data.secure_url);
     } catch (err) {
       console.error("Upload error:", err);
-      alert("Зураг илгээхэд алдаа гарлаа.");
+      toast.error("Зураг илгээхэд алдаа гарлаа.");
     } finally {
       setUploading(false);
     }
@@ -111,7 +112,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   const hasEmptyRequired = requiredFields.some((field) => !form[field as keyof typeof form]);
 
   if (hasEmptyRequired || children.some((c) => Object.values(c).some((v) => v === "")) || !url) {
-    alert("Заавал бөглөх талбаруудыг бөглөж, зураг оруулна уу!");
+    toast.warning("Заавал бөглөх талбаруудыг бөглөж, зураг оруулна уу!");
     return;
   }
 
@@ -146,9 +147,9 @@ const handleSubmit = async (e: React.FormEvent) => {
 
       if (!res.ok) {
         const err = await res.json();
-        alert("Алдаа гарлаа: " + err.error);
+        toast.error("Алдаа гарлаа: " + err.error);
       } else {
-        alert("Эм амжилттай нэмэгдлээ!");
+        toast.success("Эм амжилттай нэмэгдлээ!");
         setForm({
           tradeNameMN: "",
           tradeNameEN: "",
@@ -175,7 +176,7 @@ const handleSubmit = async (e: React.FormEvent) => {
       }
     } catch (err) {
       console.error("Error creating medicine:", err);
-      alert("Серверийн алдаа гарлаа.");
+      toast.error("Серверийн алдаа гарлаа.");
     }
   };
 

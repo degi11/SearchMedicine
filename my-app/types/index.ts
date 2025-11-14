@@ -30,3 +30,7 @@ export interface PPprops {
   prohibitions: string;
   precautions: string
 }
+
+export interface EditAndDeleteButtonProps {
+  medicineId: string;
+}
