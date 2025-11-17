@@ -29,6 +29,7 @@ export default function MedicineDetail({ id }: { id: string }) {
     fetchMedicine();
   }, [id]);
 
+
   if (!medicine) {
     return (
       <div className="flex justify-center items-center h-screen text-xl">
@@ -51,8 +52,8 @@ export default function MedicineDetail({ id }: { id: string }) {
       case "Хориглох, Анхаарах зүйлс":
         return (
           <div className="gap-5">
-            {medicine.prohibitionsPrecautions.map((el: PPprops, i: number) => (
-              <div key={i} className="grid grid-cols-3 gap-5">
+            {medicine.prohibitionsPrecautions.map((el: PPprops, id: number) => (
+              <div key={id} className="grid grid-cols-3 gap-5">
                 <div className="flex flex-col bg-red-50 rounded-xl p-5 border border-red-100">
                   <div>
                     <ShieldAlert className="text-red-600" />
@@ -84,8 +85,8 @@ export default function MedicineDetail({ id }: { id: string }) {
         return (
           <div>
             {medicine.interactionWithOtherDrugs.map(
-              (el: IODrugs, i: number) => (
-                <div className="grid grid-cols-2 gap-8" key={i}>
+              (el: IODrugs, id: number) => (
+                <div className="grid grid-cols-2 gap-8" key={id}>
                   <div className="bg-green-50 rounded-xl p-5 border border-green-100">
                     <ThumbsUp className="text-green-600" />
                     <p>{el.positive}</p>
@@ -105,8 +106,8 @@ export default function MedicineDetail({ id }: { id: string }) {
             <div className="w-fit h-fit bg-blue-50 rounded-xl p-2 px-4 border border-blue-100">
               <p className="text-xl">Насанд хүрсэн хүний тун</p>
               <span className="w-99/100 h-px bg-gray-400 block justify-self-center mt-3" />
-              {medicine.adult.map((el: AdultDose, i: number) => (
-                <div key={i} className="flex gap-4 mt-2 ">
+              {medicine.adult.map((el: AdultDose, id: number) => (
+                <div key={id} className="flex gap-4 mt-2 ">
                   <p className="pl-2">{el.dose}</p>
                   <span className="w-px h-7 bg-gray-400 block justify-self-center" />
                   <p>Өдөрт {el.time} удаа</p>
@@ -121,8 +122,8 @@ export default function MedicineDetail({ id }: { id: string }) {
 
               <span className="w-99/100 h-px bg-gray-400 block justify-self-center" />
 
-              {medicine.child.map((el: ChildDose, i: number) => (
-                <div key={i} className=" ">
+              {medicine.child.map((el: ChildDose, id: number) => (
+                <div key={id} className=" ">
                   <div className="grid grid-cols-3 mb-2 mt-2">
                     <div className="border-r border-gray-400 p-1 pl-4">
                       <p>{el.age}</p>
@@ -134,7 +135,7 @@ export default function MedicineDetail({ id }: { id: string }) {
                       <p>Өдөрт {el.time} удаа</p>
                     </div>
                   </div>
-                  {i < medicine.child.length - 1 && (
+                  {id < medicine.child.length - 1 && (
                     <span className="w-99/100 h-px bg-gray-400 block justify-self-center" />
                   )}
                 </div>
@@ -171,7 +172,7 @@ export default function MedicineDetail({ id }: { id: string }) {
             <h1 className="text-2xl font-semibold">{medicine.tradeNameMN}</h1>
             <div className="">
               <p className="text-xl font-semibold">No{medicine.no}</p>
-              {medicine.conditionOfIssue ? (
+              {medicine.conditionsOfIssue ? (
                 <p className="text-xl">Жортой</p>
               ) : (
                 <p className="text-xl">Жоргүй</p>
@@ -198,8 +199,10 @@ export default function MedicineDetail({ id }: { id: string }) {
 
           <div>categories</div>
           <div className="w-full flex gap-3">
-            <Button className="bg-[#00AC94] hover:bg-[#00AC94] hover:text-black">Print</Button>
-            <EditButton medicine={medicine.id}/>
+            <Button className="bg-[#00AC94] hover:bg-[#00AC94] hover:text-black">
+              Print
+            </Button>
+            <EditButton medicine={medicine} />
             <DeleteButton medicineId={medicine.id} />
           </div>
         </div>

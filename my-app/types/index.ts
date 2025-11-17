@@ -31,6 +31,10 @@ export interface PPprops {
   precautions: string
 }
 
-export interface EditAndDeleteButtonProps {
+export interface DeleteButtonProps {
   medicineId: string;
+}
+
+export interface EditButtonProps {
+  medicine: any;
 }

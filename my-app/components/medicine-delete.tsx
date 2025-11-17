@@ -16,11 +16,11 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "sonner";
-import { EditAndDeleteButtonProps } from "@/types";
+import { DeleteButtonProps } from "@/types";
 
 
 
-export default function DeleteButton({ medicineId }: EditAndDeleteButtonProps) {
+export default function DeleteButton({ medicineId }: DeleteButtonProps) {
   const router = useRouter();
   const [userRole, setUserRole] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);

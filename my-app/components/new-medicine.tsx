@@ -52,9 +52,9 @@ export default function NewMedicine() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleChildChange = (index: number, field: string, value: string) => {
+  const handleChildChange = (id: number, field: string, value: string) => {
     const updated = [...children];
-    updated[index][field as keyof (typeof updated)[number]] = value;
+    updated[id][field as keyof (typeof updated)[number]] = value;
     setChildren(updated);
   };
 
@@ -62,9 +62,9 @@ export default function NewMedicine() {
     setChildren([...children, { age: "", dose: "", time: "" }]);
   };
 
-  const removeChildDose = (index: number) => {
+  const removeChildDose = (id: number) => {
     const updated = [...children];
-    updated.splice(index, 1);
+    updated.splice(id, 1);
     setChildren(updated.length ? updated : [{ age: "", dose: "", time: "" }]);
   };
 
@@ -97,24 +97,26 @@ export default function NewMedicine() {
     }
   };
 
-const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const requiredFields = [
-    "tradeNameMN",
-    "tradeNameEN",
-    "internationalName",
-    "dosage",
-    "dosageForm",
-    "country",
-  ];
+    const requiredFields = [
+      "tradeNameMN",
+      "tradeNameEN",
+      "internationalName",
+      "dosage",
+      "dosageForm",
+      "country",
+    ];
 
-  const hasEmptyRequired = requiredFields.some((field) => !form[field as keyof typeof form]);
+    const hasEmptyRequired = requiredFields.some(
+      (field) => !form[field as keyof typeof form]
+    );
 
-  if (hasEmptyRequired || children.some((c) => Object.values(c).some((v) => v === "")) || !url) {
-    toast.warning("Заавал бөглөх талбаруудыг бөглөж, зураг оруулна уу!");
-    return;
-  }
+    if (hasEmptyRequired || !url) {
+      toast.warning("Заавал бөглөх талбаруудыг бөглөж, зураг оруулна уу!");
+      return;
+    }
 
     try {
       const token = localStorage.getItem("token");
@@ -217,11 +219,10 @@ const handleSubmit = async (e: React.FormEvent) => {
     return (
       <div className="flex justify-center items-center h-screen text-xl">
         <Button disabled size="sm">
-        <Spinner />
-        Checking...
-      </Button>
+          <Spinner />
+          Checking...
+        </Button>
       </div>
-      
     );
   }
 
@@ -253,9 +254,9 @@ const handleSubmit = async (e: React.FormEvent) => {
           )}
         </div>
 
-        {NewMedicineCreateInputTextArrey.map((el, index) => (
+        {NewMedicineCreateInputTextArrey.map((el, id) => (
           <Input
-            key={index}
+            key={id}
             name={el.name}
             type={el.type || "text"}
             placeholder={el.placeholder}
@@ -277,14 +278,13 @@ const handleSubmit = async (e: React.FormEvent) => {
           <option value="true">Жортой</option>
         </select>
 
-        {NewMedicineCreateTextareaArrey.map((el, index) => (
+        {NewMedicineCreateTextareaArrey.map((el, id) => (
           <Textarea
-            key={index}
+            key={id}
             name={el.name}
             placeholder={el.placeholder}
             value={form[el.name as keyof typeof form]}
             onChange={handleChange}
-            required
             className="border-black p-2 col-span-2"
           />
         ))}
@@ -310,39 +310,30 @@ const handleSubmit = async (e: React.FormEvent) => {
 
         <div className="col-span-2 border p-3 rounded-sm border-black">
           <h2 className="font-semibold mb-2">Хүүхдийн тунгийн мэдээлэл</h2>
-          {children.map((child, index) => (
-            <div key={index} className="grid grid-cols-4 gap-2 mb-2 ">
+          {children.map((child, id) => (
+            <div key={id} className="grid grid-cols-4 gap-2 mb-2 ">
               <Input
                 placeholder="Нас"
                 value={child.age}
-                onChange={(e) =>
-                  handleChildChange(index, "age", e.target.value)
-                }
-                required
+                onChange={(e) => handleChildChange(id, "age", e.target.value)}
                 className="border-black"
               />
               <Input
                 placeholder="Тун"
                 value={child.dose}
-                onChange={(e) =>
-                  handleChildChange(index, "dose", e.target.value)
-                }
+                onChange={(e) => handleChildChange(id, "dose", e.target.value)}
                 className="border-black p-2"
-                required
               />
               <Input
                 placeholder="Хугацаа"
                 value={child.time}
-                onChange={(e) =>
-                  handleChildChange(index, "time", e.target.value)
-                }
+                onChange={(e) => handleChildChange(id, "time", e.target.value)}
                 className="border-black p-2"
-                required
               />
               <div>
                 <Button
                   type="button"
-                  onClick={() => removeChildDose(index)}
+                  onClick={() => removeChildDose(id)}
                   className="px-2 py-1 rounded col-span-3 bg-red-500"
                 >
                   <CircleMinus />

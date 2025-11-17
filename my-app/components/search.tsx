@@ -12,10 +12,18 @@ export default function Search() {
   const [loading, setLoading] = useState(false);
   const debounceRef = useRef<number | null>(null);
 
+  const barcodeRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    barcodeRef.current?.focus();
+  }, []);
+
   const triggerSearch = (q: string, bc: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
+
     debounceRef.current = window.setTimeout(async () => {
       setLoading(true);
+
       try {
         const params = new URLSearchParams();
         if (q) params.set("q", q);
@@ -46,7 +54,7 @@ export default function Search() {
   return (
     <div className="w-7xl mx-auto mt-8 p-4">
       <form className="grid grid-rows-2 md:grid-cols-2 lg:grid-cols-2 gap-4">
-        <div className="">
+        <div>
           <Input
             placeholder="Эмийн нэр (MN/EN)"
             value={name}
@@ -54,12 +62,20 @@ export default function Search() {
             className="h-12 border-black shadow-md"
           />
         </div>
+
         <div className="flex">
           <Input
+            ref={barcodeRef}
             placeholder="Barcode"
             value={barcode}
             onChange={(e) => setBarcode(e.target.value)}
             className="h-12 border-black shadow-md"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                triggerSearch(name, barcode);
+              }
+            }}
           />
         </div>
       </form>
@@ -89,7 +105,9 @@ export default function Search() {
       </div>
 
       {!loading && results.length === 0 && (name || barcode) && (
-        <p className="text-center text-gray-500 mt-6">Үр дүн олдсонгүй.</p>
+        <p className="text-center text-gray-500 mt-6">
+          Үр дүн олдсонгүй.
+        </p>
       )}
     </div>
   );
