@@ -29,7 +29,6 @@ export default function MedicineDetail({ id }: { id: string }) {
     fetchMedicine();
   }, [id]);
 
-
   if (!medicine) {
     return (
       <div className="flex justify-center items-center h-screen text-xl">
@@ -53,21 +52,29 @@ export default function MedicineDetail({ id }: { id: string }) {
         return (
           <div className="gap-5">
             {medicine.prohibitionsPrecautions.map((el: PPprops, id: number) => (
-              <div key={id} className="grid grid-cols-3 gap-5">
+              <div
+                key={id}
+                className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-5 "
+              >
                 <div className="flex flex-col bg-red-50 rounded-xl p-5 border border-red-100">
-                  <div>
+                  <div className="flex gap-2 items-center">
                     <ShieldAlert className="text-red-600" />
+                    <p className="font-semibold">Хориглох</p>
                   </div>
                   <p>{el.prohibitions}</p>
                 </div>
                 <div className="bg-orange-50 rounded-xl p-5 border border-orange-100">
-                  <div>
+                  <div className="flex items-center gap-2">
                     <AlertTriangle className="text-orange-600" />
+                    <p className="font-semibold">Анхаарах</p>
                   </div>
                   <p>{el.precautions}</p>
                 </div>
                 <div className="bg-blue-50 rounded-xl p-5 border border-blue-100">
-                  <AlertCircle className="text-blue-600" />
+                  <div className="flex gap-2 items-center">
+                    <AlertCircle className="text-blue-600" />
+                    <p className="font-semibold">Жирэмсэн болон хөхүүл үед</p>
+                  </div>
                   <p>{medicine.useDuringPregnancyAndLactation}</p>
                 </div>
               </div>
@@ -86,13 +93,23 @@ export default function MedicineDetail({ id }: { id: string }) {
           <div>
             {medicine.interactionWithOtherDrugs.map(
               (el: IODrugs, id: number) => (
-                <div className="grid grid-cols-2 gap-8" key={id}>
+                <div
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3 md:gap-6 lg:gap-8"
+                  key={id}
+                >
                   <div className="bg-green-50 rounded-xl p-5 border border-green-100">
-                    <ThumbsUp className="text-green-600" />
+                    <div className="flex gap-2 items-center">
+                      <ThumbsUp className="text-green-600" />
+                      <p className="font-semibold">Бусад эмтэй эерэг харилцан үйлчлэл</p>
+                    </div>
+
                     <p>{el.positive}</p>
                   </div>
                   <div className="bg-red-50 rounded-xl p-5 border border-red-100">
-                    <ThumbsDown className="text-red-600" />
+                    <div className="flex gap-2 items-center">
+                      <ThumbsDown className="text-red-600" />
+                      <p className="font-semibold">Бусад эмтэй сөрөг харилцан үйлчлэл</p>
+                    </div>
                     <p>{el.negative}</p>
                   </div>
                 </div>
@@ -102,17 +119,19 @@ export default function MedicineDetail({ id }: { id: string }) {
         );
       case "Хэрэглэх тун, Хугацаа":
         return (
-          <div className="grid grid-cols-2">
-            <div className="w-fit h-fit bg-blue-50 rounded-xl p-2 px-4 border border-blue-100">
-              <p className="text-xl">Насанд хүрсэн хүний тун</p>
-              <span className="w-99/100 h-px bg-gray-400 block justify-self-center mt-3" />
-              {medicine.adult.map((el: AdultDose, id: number) => (
-                <div key={id} className="flex gap-4 mt-2 ">
-                  <p className="pl-2">{el.dose}</p>
-                  <span className="w-px h-7 bg-gray-400 block justify-self-center" />
-                  <p>Өдөрт {el.time} удаа</p>
-                </div>
-              ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3 justify-center">
+            <div className="flex justify-center">
+              <div className="w-fit h-fit bg-blue-50 rounded-xl p-2 px-4 border border-blue-100 justify-center">
+                <p className="text-xl">Насанд хүрсэн хүний тун</p>
+                <span className="w-99/100 h-px bg-gray-400 block justify-self-center mt-3" />
+                {medicine.adult.map((el: AdultDose, id: number) => (
+                  <div key={id} className="flex gap-4 mt-2 ">
+                    <p className="pl-2">{el.dose}</p>
+                    <span className="w-px h-7 bg-gray-400 block justify-self-center" />
+                    <p>Өдөрт {el.time} удаа</p>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="bg-green-50 p-1 border border-green-100 rounded-xl">
@@ -156,21 +175,24 @@ export default function MedicineDetail({ id }: { id: string }) {
     }`;
 
   return (
-    <div className="max-w-7xl h-screen mt-10 mx-auto mb-40">
-      <div className="grid grid-cols-2 gap-8">
-        <div className="h-auto">
+    <div className="max-w-7xl mx-auto mt-10 mb-40 px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="relative w-full h-80 md:h-[400px]">
           <Image
-            src={medicine.image}
+            src={`${medicine.image.replace(
+              "/upload/",
+              "/upload/q_100,f_auto/"
+            )}`}
             alt={medicine.tradeNameEN}
-            width={50}
-            height={50}
-            className="object-cover w-full rounded-xl"
+            fill
+            className="object-cover rounded-xl"
           />
         </div>
+
         <div className="flex flex-col gap-6">
-          <div className="flex gap-8 justify-between">
-            <h1 className="text-2xl font-semibold">{medicine.tradeNameMN}</h1>
-            <div className="">
+          <div className="flex flex-col sm:flex-row justify-between gap-4">
+            <h1 className="text-2xl md:text-3xl lg:text-3xl font-semibold">{medicine.tradeNameMN}</h1>
+            <div>
               <p className="text-xl font-semibold">No{medicine.no}</p>
               {medicine.conditionsOfIssue ? (
                 <p className="text-xl">Жортой</p>
@@ -179,6 +201,7 @@ export default function MedicineDetail({ id }: { id: string }) {
               )}
             </div>
           </div>
+
           <div className="w-full border-gray-400 border rounded-2xl">
             <div className="w-full flex items-center gap-3 lg:pl-5 p-3 rounded-md">
               <PillIcon className="text-[#00AC94]" />
@@ -197,8 +220,7 @@ export default function MedicineDetail({ id }: { id: string }) {
             </div>
           </div>
 
-          <div>categories</div>
-          <div className="w-full flex gap-3">
+          <div className="w-full flex flex-wrap gap-3">
             <Button className="bg-[#00AC94] hover:bg-[#00AC94] hover:text-black">
               Print
             </Button>
@@ -207,28 +229,31 @@ export default function MedicineDetail({ id }: { id: string }) {
           </div>
         </div>
       </div>
-      <div className="w-full flex flex-col items-center gap-4 mt-15">
+
+      <div className="w-full flex flex-col items-center gap-4 mt-8">
         <h1 className="text-xl lg:text-3xl">Бүтээгдэхүүний дэлгэрэнгүй</h1>
         <span className="w-1/3 h-px bg-gray-200" />
       </div>
 
-      <div className="w-full mt-10">
-        <div className="flex gap-10 border-b border-gray-200 mb-4">
-          {[
-            "Хэрэглэх заалт",
-            "Хориглох, Анхаарах зүйлс",
-            "Гаж нөлөө",
-            "Бусад эмтэй харилцан үйлчлэл",
-            "Хэрэглэх тун, Хугацаа",
-          ].map((tab) => (
-            <div
-              key={tab}
-              className={tabClasses(tab)}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab}
-            </div>
-          ))}
+      <div className="w-full mt-6">
+        <div className="overflow-x-auto">
+          <div className="flex gap-4 whitespace-nowrap border-b border-gray-200 mb-4">
+            {[
+              "Хэрэглэх заалт",
+              "Хориглох, Анхаарах зүйлс",
+              "Гаж нөлөө",
+              "Бусад эмтэй харилцан үйлчлэл",
+              "Хэрэглэх тун, Хугацаа",
+            ].map((tab) => (
+              <div
+                key={tab}
+                className={`${tabClasses(tab)} inline-block px-3 py-2`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab}
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="text-gray-800 leading-relaxed">{renderContent()}</div>
