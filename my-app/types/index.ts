@@ -38,3 +38,5 @@ export interface DeleteButtonProps {
 export interface EditButtonProps {
   medicine: any;
 }
+
+

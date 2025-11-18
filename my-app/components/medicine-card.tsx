@@ -1,8 +1,13 @@
 "use client";
 import { MedicineCardProrps } from "@/types";
-import { ImageOff } from "lucide-react";
+import {
+  BookmarkCheck,
+  BookmarkPlus,
+  ImageOff,
+} from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useCart } from "./cart-context";
 
 export default function MedicineCard({
   medicineName,
@@ -16,6 +21,20 @@ export default function MedicineCard({
   image,
 }: MedicineCardProrps) {
   const router = useRouter();
+  const { addToCart, isInCart } = useCart();
+
+  const alreadyInCart = isInCart(id ?? "");
+
+  const handleAdd = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (alreadyInCart) return;
+
+    addToCart({
+      id: id ?? "",
+      name: medicineName ?? "",
+      quantity: 1,
+    });
+  };
 
   return (
     <div
@@ -36,6 +55,7 @@ export default function MedicineCard({
             <ImageOff className="text-green-200" size={60} />
           </div>
         )}
+
         <div className="absolute top-3 right-3 bg-white rounded-lg px-2 shadow-md">
           {conditionsOfIssue ? (
             <span className="text-sm font-semibold text-green-600">Жортой</span>
@@ -43,7 +63,20 @@ export default function MedicineCard({
             <span className="text-sm font-semibold text-green-600">Жоргүй</span>
           )}
         </div>
+
+        <button
+          onClick={handleAdd}
+          disabled={alreadyInCart}
+          className="absolute top-3 left-3 bg-[#00AC94] text-white w-9 h-9 rounded-2xl flex items-center justify-center transition-all duration-200"
+        >
+          {alreadyInCart ? (
+            <BookmarkCheck className="w-6 h-6 text-white" />
+          ) : (
+            <BookmarkPlus className="w-6 h-6 text-white" />
+          )}
+        </button>
       </div>
+
       <div className="p-3">
         <div className="flex flex-col md:flex-row md:justify-between ">
           <h1 className="font-bold text-base sm:text-lg line-clamp-1 sm:line-clamp-2 transition-all duration-200 group-hover:text-[#00AC94]">
@@ -51,6 +84,7 @@ export default function MedicineCard({
           </h1>
           <p className="font-bold text-sm sm:text-base">№{no}</p>
         </div>
+
         <p className="font-medium text-sm sm:text-base line-clamp-1">
           {dosage}
         </p>
@@ -58,7 +92,7 @@ export default function MedicineCard({
           {dosageForm}
         </p>
         <div className="text-sm sm:text-base line-clamp-1">{country}</div>
-        <div className="text-sm sm:text-base line-clamp-1 ">{registered}</div>
+        <div className="text-sm sm:text-base line-clamp-1">{registered}</div>
       </div>
     </div>
   );

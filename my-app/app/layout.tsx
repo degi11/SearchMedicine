@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/auth-context";
 import NavbarWrapper from "@/components/navbar-wrapper";
 import { Toaster } from "sonner";
+import { CartProvider } from "@/components/cart-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,10 +32,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <NavbarWrapper>
-            {children}
-            <Toaster position="top-right" richColors closeButton />
-          </NavbarWrapper>
+          <CartProvider>
+            <NavbarWrapper>
+              {children}
+              <Toaster position="top-right" richColors closeButton />
+            </NavbarWrapper>
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>

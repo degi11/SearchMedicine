@@ -1,6 +1,28 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+@media print {
+  .print-expand {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
+
+@media print {
+  .no-print-style {
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    background: none !important;
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
