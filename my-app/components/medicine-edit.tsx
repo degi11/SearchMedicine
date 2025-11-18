@@ -32,15 +32,15 @@ export default function EditButton({ medicine }: EditButtonProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const [prohibitionsPrecautions, setProhibitionsPrecautions] = useState([
+  const [prohibitionsPrecautions] = useState([
     { prohibitions: "", precautions: "" },
   ]);
 
-  const [interactionWithOtherDrugs, setInteractionWithOtherDrugs] = useState([
+  const [interactionWithOtherDrugs] = useState([
     { positive: "", negative: "" },
   ]);
 
-  const [children, setChildren] = useState([{ age: "", dose: "", time: "" }]);
+const [children, setChildren] = useState([{ age: "", dose: "", time: "" }]);
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
@@ -102,15 +102,25 @@ export default function EditButton({ medicine }: EditButtonProps) {
     }
   };
 
-  const addChild = () => {
-    setChildren([...children, { age: "", dose: "", time: "" }]);
-  };
+const addChild = () => {
+  setForm((prev: any) => ({
+    ...prev,
+    child: [...(prev.child || []), { age: "", dose: "", time: "" }]
+  }));
+};
+
 
   const removeChildDose = (index: number) => {
-    const updated = [...children];
+  setForm((prev: any) => {
+    const updated = [...prev.child];
     updated.splice(index, 1);
-    setChildren(updated.length ? updated : [{ age: "", dose: "", time: "" }]);
-  };
+    return {
+      ...prev,
+      child: updated.length ? updated : [{ age: "", dose: "", time: "" }]
+    };
+  });
+};
+
 
   return (
     <>
