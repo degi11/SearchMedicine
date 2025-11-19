@@ -40,8 +40,6 @@ export default function EditButton({ medicine }: EditButtonProps) {
     { positive: "", negative: "" },
   ]);
 
-const [children, setChildren] = useState([{ age: "", dose: "", time: "" }]);
-
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
     if (savedToken) {
@@ -102,25 +100,23 @@ const [children, setChildren] = useState([{ age: "", dose: "", time: "" }]);
     }
   };
 
-const addChild = () => {
-  setForm((prev: any) => ({
-    ...prev,
-    child: [...(prev.child || []), { age: "", dose: "", time: "" }]
-  }));
-};
-
+  const addChild = () => {
+    setForm((prev: any) => ({
+      ...prev,
+      child: [...(prev.child || []), { age: "", dose: "", time: "" }],
+    }));
+  };
 
   const removeChildDose = (index: number) => {
-  setForm((prev: any) => {
-    const updated = [...prev.child];
-    updated.splice(index, 1);
-    return {
-      ...prev,
-      child: updated.length ? updated : [{ age: "", dose: "", time: "" }]
-    };
-  });
-};
-
+    setForm((prev: any) => {
+      const updated = [...prev.child];
+      updated.splice(index, 1);
+      return {
+        ...prev,
+        child: updated.length ? updated : [{ age: "", dose: "", time: "" }],
+      };
+    });
+  };
 
   return (
     <>
@@ -190,7 +186,7 @@ const addChild = () => {
                   <Textarea
                     value={el.prohibitions}
                     onChange={(e) => {
-                      const updated = [...prohibitionsPrecautions];
+                      const updated = [...form.prohibitionsPrecautions];
                       updated[i].prohibitions = e.target.value;
                       setForm((prev: any) => ({
                         ...prev,
@@ -204,7 +200,7 @@ const addChild = () => {
                   <Textarea
                     value={el.precautions}
                     onChange={(e) => {
-                      const updated = [...prohibitionsPrecautions];
+                      const updated = [...form.prohibitionsPrecautions];
                       updated[i].precautions = e.target.value;
                       setForm((prev: any) => ({
                         ...prev,
@@ -222,7 +218,7 @@ const addChild = () => {
                   <Textarea
                     value={el.positive}
                     onChange={(e) => {
-                      const updated = [...interactionWithOtherDrugs];
+                      const updated = [...form.interactionWithOtherDrugs];
                       updated[i].positive = e.target.value;
                       setForm((prev: any) => ({
                         ...prev,
@@ -236,7 +232,7 @@ const addChild = () => {
                   <Textarea
                     value={el.negative}
                     onChange={(e) => {
-                      const updated = [...interactionWithOtherDrugs];
+                      const updated = [...form.interactionWithOtherDrugs];
                       updated[i].negative = e.target.value;
                       setForm((prev: any) => ({
                         ...prev,

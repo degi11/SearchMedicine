@@ -15,10 +15,15 @@ import { useEffect, useState } from "react";
 import { AdultDose, ChildDose, IODrugs, PPprops } from "@/types";
 import DeleteButton from "./medicine-delete";
 import EditButton from "./medicine-edit";
+import { useCart } from "./cart-context";
 
 export default function MedicineDetail({ id }: { id: string }) {
   const [medicine, setMedicine] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("Тайлбар");
+
+  const { addToCart, isInCart } = useCart();
+
+  const alreadyInCart = isInCart(id ?? "");
 
   useEffect(() => {
     const fetchMedicine = async () => {
@@ -39,6 +44,17 @@ export default function MedicineDetail({ id }: { id: string }) {
       </div>
     );
   }
+
+  const handleAdd = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (alreadyInCart) return;
+
+    addToCart({
+      id: medicine.id ?? "",
+      name: medicine.tradeNameMN ?? "",
+      quantity: 1,
+    });
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -75,7 +91,11 @@ export default function MedicineDetail({ id }: { id: string }) {
                     <AlertCircle className="text-blue-600" />
                     <p className="font-semibold">Жирэмсэн болон хөхүүл үед</p>
                   </div>
-                  <p>{medicine.useDuringPregnancyAndLactation}</p>
+                  {medicine.useDuringPregnancyAndLactation?.length ? (
+                    <p>{medicine.useDuringPregnancyAndLactation}</p>
+                  ) : (
+                    <p>Жирэмсэн болон хөхүүл үед хийсэн судалгаа байхгүй.</p>
+                  )}
                 </div>
               </div>
             ))}
@@ -100,17 +120,29 @@ export default function MedicineDetail({ id }: { id: string }) {
                   <div className="bg-green-50 rounded-xl p-5 border border-green-100">
                     <div className="flex gap-2 items-center">
                       <ThumbsUp className="text-green-600" />
-                      <p className="font-semibold">Бусад эмтэй эерэг харилцан үйлчлэл</p>
+                      <p className="font-semibold">
+                        Бусад эмтэй эерэг харилцан үйлчлэл
+                      </p>
                     </div>
 
-                    <p>{el.positive}</p>
+                    {el.positive?.length ? (
+                      <p>{el.positive}</p>
+                    ) : (
+                      <p>Эерэг харилцан үйлчлэх эм байхгүй</p>
+                    )}
                   </div>
                   <div className="bg-red-50 rounded-xl p-5 border border-red-100">
                     <div className="flex gap-2 items-center">
                       <ThumbsDown className="text-red-600" />
-                      <p className="font-semibold">Бусад эмтэй сөрөг харилцан үйлчлэл</p>
+                      <p className="font-semibold">
+                        Бусад эмтэй сөрөг харилцан үйлчлэл
+                      </p>
                     </div>
-                    <p>{el.negative}</p>
+                    {el.negative?.length ? (
+                      <p>{el.negative}</p>
+                    ) : (
+                      <p>Сөрөг харилцан үйлчлэх эм байхгүй</p>
+                    )}
                   </div>
                 </div>
               )
@@ -141,24 +173,30 @@ export default function MedicineDetail({ id }: { id: string }) {
 
               <span className="w-99/100 h-px bg-gray-400 block justify-self-center" />
 
-              {medicine.child.map((el: ChildDose, id: number) => (
-                <div key={id} className=" ">
-                  <div className="grid grid-cols-3 mb-2 mt-2">
-                    <div className="border-r border-gray-400 p-1 pl-4">
-                      <p>{el.age}</p>
+              {medicine.child[0].dose?.length ? (
+                medicine.child.map((el: ChildDose, id: number) => (
+                  <div key={id} className=" ">
+                    <div className="grid grid-cols-3 mb-2 mt-2">
+                      <div className="border-r border-gray-400 p-1 pl-4">
+                        <p>{el.age}</p>
+                      </div>
+                      <div className="border-r border-gray-400 p-1 pl-4">
+                        <p>{el.dose}</p>
+                      </div>
+                      <div className="p-1 pl-4">
+                        <p>Өдөрт {el.time} удаа</p>
+                      </div>
                     </div>
-                    <div className="border-r border-gray-400 p-1 pl-4">
-                      <p>{el.dose}</p>
-                    </div>
-                    <div className="p-1 pl-4">
-                      <p>Өдөрт {el.time} удаа</p>
-                    </div>
+                    {id < medicine.child.length - 1 && (
+                      <span className="w-99/100 h-px bg-gray-400 block justify-self-center" />
+                    )}
                   </div>
-                  {id < medicine.child.length - 1 && (
-                    <span className="w-99/100 h-px bg-gray-400 block justify-self-center" />
-                  )}
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="text-gray-600 p-3">
+                  Хүүхдийн тунгийн мэдээлэл байхгүй.
+                </p>
+              )}
             </div>
           </div>
         );
@@ -191,7 +229,9 @@ export default function MedicineDetail({ id }: { id: string }) {
 
         <div className="flex flex-col gap-6">
           <div className="flex flex-col sm:flex-row justify-between gap-4">
-            <h1 className="text-2xl md:text-3xl lg:text-3xl font-semibold">{medicine.tradeNameMN}</h1>
+            <h1 className="text-2xl md:text-3xl lg:text-3xl font-semibold">
+              {medicine.tradeNameMN}
+            </h1>
             <div>
               <p className="text-xl font-semibold">No{medicine.no}</p>
               {medicine.conditionsOfIssue ? (
@@ -221,8 +261,12 @@ export default function MedicineDetail({ id }: { id: string }) {
           </div>
 
           <div className="w-full flex flex-wrap gap-3">
-            <Button className="bg-[#00AC94] hover:bg-[#00AC94] hover:text-black">
-              Print
+            <Button
+              onClick={handleAdd}
+              disabled={alreadyInCart}
+              className="bg-[#00AC94] hover:bg-[#00AC94] hover:text-black transition-all duration-200"
+            >
+              {alreadyInCart ? <div>Checked...</div> : <div>Check</div>}
             </Button>
             <EditButton medicine={medicine} />
             <DeleteButton medicineId={medicine.id} />
