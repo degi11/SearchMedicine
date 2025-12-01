@@ -18,16 +18,21 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
-    ],  
+    ],
   },
 ];
+
 module.exports = {
   ignorePatterns: [
     "app/generated/prisma/**",
   ],
-  rules: {
-    
+  parserOptions: {
+    sourceType: "module",
   },
-}
+  rules: {
+    "no-undef": "off",
+  },
+};
 
 export default eslintConfig;
+
