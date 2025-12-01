@@ -52,8 +52,7 @@ export async function POST(req: Request) {
         sideEffects: data.sideEffects,
         interactionWithOtherDrugs: data.interactionWithOtherDrugs,
         useDuringPregnancyAndLactation: data.useDuringPregnancyAndLactation,
-        adult: data.adult,
-        child: data.child,
+        doseUsage: data.doseUsage,
         image: data.image,
       },
     });
@@ -98,8 +97,7 @@ export async function PUT(req: Request) {
         sideEffects: data.sideEffects,
         interactionWithOtherDrugs: data.interactionWithOtherDrugs,
         useDuringPregnancyAndLactation: data.useDuringPregnancyAndLactation,
-        adult: data.adult,
-        child: data.child,
+        doseUsage: data.doseUsage,
         image: data.image,
       },
     });

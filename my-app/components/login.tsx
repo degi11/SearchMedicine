@@ -49,7 +49,7 @@ const [email, setEmail] = useState("");
 
       setTimeout(() => {
         if (data.role === "admin") {
-          router.push("/admin");
+          router.push("/");
         } else {
           router.push("/");
         }

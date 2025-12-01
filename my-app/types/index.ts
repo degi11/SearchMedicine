@@ -10,7 +10,7 @@ export interface MedicineCardProrps {
   id: string | null;
 }
 
-export interface ChildDose {
+export interface DoseUsage {
   age: string;
   dose: string;
   time: string;
@@ -39,4 +39,13 @@ export interface EditButtonProps {
   medicine: any;
 }
 
+export interface CartItem {
+  id: string;
+  name: string;
+  quantity?: number;
+}
 
+export interface PrintRecipeProps {
+  cart: CartItem[];
+  inputs: Record<string, { dose?: string; times?: string; timesOption?: string; perDay?: string }>;
+}

@@ -12,7 +12,7 @@ import {
 import Image from "next/image";
 import { Spinner } from "./ui/spinner";
 import { useEffect, useState } from "react";
-import { AdultDose, ChildDose, IODrugs, PPprops } from "@/types";
+import { DoseUsage, IODrugs, PPprops } from "@/types";
 import DeleteButton from "./medicine-delete";
 import EditButton from "./medicine-edit";
 import { useCart } from "./cart-context";
@@ -149,32 +149,20 @@ export default function MedicineDetail({ id }: { id: string }) {
             )}
           </div>
         );
-      case "Хэрэглэх тун, Хугацаа":
+      case "Хэрэглэх арга тун":
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3 justify-center">
-            <div className="flex justify-center">
-              <div className="w-fit h-fit bg-blue-50 rounded-xl p-2 px-4 border border-blue-100 justify-center">
-                <p className="text-xl">Насанд хүрсэн хүний тун</p>
-                <span className="w-99/100 h-px bg-gray-400 block justify-self-center mt-3" />
-                {medicine.adult.map((el: AdultDose, id: number) => (
-                  <div key={id} className="flex gap-4 mt-2 ">
-                    <p className="pl-2">{el.dose}</p>
-                    <span className="w-px h-7 bg-gray-400 block justify-self-center" />
-                    <p>Өдөрт {el.time} удаа</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+            
 
             <div className="bg-green-50 p-1 border border-green-100 rounded-xl">
               <div className="w-full flex items-center justify-center mb-4">
-                <p className="text-xl">Хүүхдийн уух тун</p>
+                <p className="text-xl">Уух тун</p>
               </div>
 
               <span className="w-99/100 h-px bg-gray-400 block justify-self-center" />
 
-              {medicine.child[0].dose?.length ? (
-                medicine.child.map((el: ChildDose, id: number) => (
+              {medicine.doseUsage[0].dose?.length ? (
+                medicine.doseUsage.map((el: DoseUsage, id: number) => (
                   <div key={id} className=" ">
                     <div className="grid grid-cols-3 mb-2 mt-2">
                       <div className="border-r border-gray-400 p-1 pl-4">
@@ -184,10 +172,10 @@ export default function MedicineDetail({ id }: { id: string }) {
                         <p>{el.dose}</p>
                       </div>
                       <div className="p-1 pl-4">
-                        <p>Өдөрт {el.time} удаа</p>
+                        <p>{el.time}</p>
                       </div>
                     </div>
-                    {id < medicine.child.length - 1 && (
+                    {id < medicine.doseUsage.length - 1 && (
                       <span className="w-99/100 h-px bg-gray-400 block justify-self-center" />
                     )}
                   </div>
@@ -284,10 +272,10 @@ export default function MedicineDetail({ id }: { id: string }) {
           <div className="flex gap-4 whitespace-nowrap border-b border-gray-200 mb-4">
             {[
               "Хэрэглэх заалт",
+              "Хэрэглэх арга тун",
               "Хориглох, Анхаарах зүйлс",
-              "Гаж нөлөө",
               "Бусад эмтэй харилцан үйлчлэл",
-              "Хэрэглэх тун, Хугацаа",
+              "Гаж нөлөө",
             ].map((tab) => (
               <div
                 key={tab}

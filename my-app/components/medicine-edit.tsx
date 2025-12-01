@@ -100,20 +100,20 @@ export default function EditButton({ medicine }: EditButtonProps) {
     }
   };
 
-  const addChild = () => {
+  const addDoseUsage = () => {
     setForm((prev: any) => ({
       ...prev,
-      child: [...(prev.child || []), { age: "", dose: "", time: "" }],
+      doseUsage: [...(prev.doseUsage || []), { age: "", dose: "", time: "" }],
     }));
   };
 
-  const removeChildDose = (index: number) => {
+  const removeDoseUsage = (index: number) => {
     setForm((prev: any) => {
-      const updated = [...prev.child];
+      const updated = [...prev.doseUsage];
       updated.splice(index, 1);
       return {
         ...prev,
-        child: updated.length ? updated : [{ age: "", dose: "", time: "" }],
+        doseUsage: updated.length ? updated : [{ age: "", dose: "", time: "" }],
       };
     });
   };
@@ -243,64 +243,41 @@ export default function EditButton({ medicine }: EditButtonProps) {
                   />
                 </div>
               ))}
-
-              <Label className="font-semibold ">Насанд хүрэгчдийн тун</Label>
-              {form.adult?.map((el: any, i: number) => (
-                <div key={i} className="grid grid-cols-2 gap-2 mb-2">
-                  <Input
-                    placeholder="Тун"
-                    value={el.dose}
-                    onChange={(e) => {
-                      const updated = [...form.adult];
-                      updated[i].dose = e.target.value;
-                      setForm((prev: any) => ({ ...prev, adult: updated }));
-                    }}
-                  />
-                  <Input
-                    placeholder="Хугацаа"
-                    value={el.time}
-                    onChange={(e) => {
-                      const updated = [...form.adult];
-                      updated[i].time = e.target.value;
-                      setForm((prev: any) => ({ ...prev, adult: updated }));
-                    }}
-                  />
-                </div>
-              ))}
+             
               <div>
-                <Label className="font-semibold mb-2">Хүүхдийн тун</Label>
-                {form.child?.map((el: any, i: number) => (
+                <Label className="font-semibold mb-2">Уух тун</Label>
+                {form.doseUsage?.map((el: any, i: number) => (
                   <div key={i} className="grid grid-cols-4 gap-1 mb-2">
                     <Input
                       placeholder="Нас"
                       value={el.age}
                       onChange={(e) => {
-                        const updated = [...form.child];
+                        const updated = [...form.doseUsage];
                         updated[i].age = e.target.value;
-                        setForm((prev: any) => ({ ...prev, child: updated }));
+                        setForm((prev: any) => ({ ...prev, doseUsage: updated }));
                       }}
                     />
                     <Input
                       placeholder="Тун"
                       value={el.dose}
                       onChange={(e) => {
-                        const updated = [...form.child];
+                        const updated = [...form.doseUsage];
                         updated[i].dose = e.target.value;
-                        setForm((prev: any) => ({ ...prev, child: updated }));
+                        setForm((prev: any) => ({ ...prev, doseUsage: updated }));
                       }}
                     />
                     <Input
                       placeholder="Хугацаа"
                       value={el.time}
                       onChange={(e) => {
-                        const updated = [...form.child];
+                        const updated = [...form.doseUsage];
                         updated[i].time = e.target.value;
-                        setForm((prev: any) => ({ ...prev, child: updated }));
+                        setForm((prev: any) => ({ ...prev, doseUsage: updated }));
                       }}
                     />
                     <Button
                       type="button"
-                      onClick={() => removeChildDose(i)}
+                      onClick={() => removeDoseUsage(i)}
                       className="w-10 rounded bg-red-500"
                     >
                       <CircleMinus />
@@ -309,7 +286,7 @@ export default function EditButton({ medicine }: EditButtonProps) {
                 ))}
                 <Button
                   type="button"
-                  onClick={addChild}
+                  onClick={addDoseUsage}
                   className="px-3 py-1 rounded bg-green-500"
                 >
                   <PlusCircle />

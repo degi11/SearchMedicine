@@ -40,7 +40,7 @@ export default function Search() {
       } finally {
         setLoading(false);
       }
-    }, 500);
+    }, 200);
   };
 
   useEffect(() => {

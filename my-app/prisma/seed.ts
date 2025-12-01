@@ -26,13 +26,11 @@ const medicineData: Prisma.MedicineCreateInput[] = [
       {positive: "ВАРФАРИН: варфарины антикоагулянт нөлөө ихэснэ.", negative:"ХОЛЕСТИАМИН: парацетамолын шимэгдэлт саатна."}
     ],
     useDuringPregnancyAndLactation: "Хөхүүл ба жирэмсэн эхчүүдэд болгоомжтой хэрэглэнэ.",
-    adult: [
-      { dose: "500мг", time: "4" }
-    ],
-    child: [
+    doseUsage: [
       { age: "3 сартайгаас 1 нас хүртэл", dose: "24 - 120мг", time: "4"},
       { age: "1 - 6 настайд", dose: "120 - 240мг", time: "4"},
-      { age: "6 - 12 настайд", dose: "240мг", time: "4"}      
+      { age: "6 - 12 настайд", dose: "240мг", time: "4"},
+      { age: "насанд хүрсэн хүн", dose: "500мг", time: "4" }
     ],
     image: "https://res.cloudinary.com/dqrd7tpyd/image/upload/v1761550263/sjh2w1xmfdorcgw8hrxp.jpg"
   },

@@ -32,8 +32,6 @@ export default function NewMedicine() {
     positive: "",
     negative: "",
     useDuringPregnancyAndLactation: "",
-    adultDose: "",
-    adultTime: "",
   });
 
   const router = useRouter();
@@ -42,7 +40,7 @@ export default function NewMedicine() {
 
   const [url, setUrl] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [children, setChildren] = useState([{ age: "", dose: "", time: "" }]);
+  const [doseUsage, setDoseUsage] = useState([{ age: "", dose: "", time: "" }]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -53,19 +51,19 @@ export default function NewMedicine() {
   };
 
   const handleChildChange = (id: number, field: string, value: string) => {
-    const updated = [...children];
+    const updated = [...doseUsage];
     updated[id][field as keyof (typeof updated)[number]] = value;
-    setChildren(updated);
+    setDoseUsage(updated);
   };
 
   const addChild = () => {
-    setChildren([...children, { age: "", dose: "", time: "" }]);
+    setDoseUsage([...doseUsage, { age: "", dose: "", time: "" }]);
   };
 
   const removeChildDose = (id: number) => {
-    const updated = [...children];
+    const updated = [...doseUsage];
     updated.splice(id, 1);
-    setChildren(updated.length ? updated : [{ age: "", dose: "", time: "" }]);
+    setDoseUsage(updated.length ? updated : [{ age: "", dose: "", time: "" }]);
   };
 
   const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
@@ -138,8 +136,7 @@ export default function NewMedicine() {
           interactionWithOtherDrugs: [
             { positive: form.positive, negative: form.negative },
           ],
-          adult: [{ dose: form.adultDose, time: form.adultTime }],
-          child: children.map((c) => ({
+          doseUsage: doseUsage.map((c) => ({
             age: c.age,
             dose: c.dose,
             time: c.time,
@@ -170,10 +167,8 @@ export default function NewMedicine() {
           positive: "",
           negative: "",
           useDuringPregnancyAndLactation: "",
-          adultDose: "",
-          adultTime: "",
         });
-        setChildren([{ age: "", dose: "", time: "" }]);
+        setDoseUsage([{ age: "", dose: "", time: "" }]);
         setUrl(null);
       }
     } catch (err) {
@@ -289,28 +284,9 @@ export default function NewMedicine() {
           />
         ))}
 
-        <div className="col-span-2 grid grid-cols-2 gap-2">
-          <Input
-            name="adultDose"
-            placeholder="Насанд хүрэгчдийн тун"
-            value={form.adultDose}
-            onChange={handleChange}
-            required
-            className="border-black h-[41px]"
-          />
-          <Input
-            name="adultTime"
-            placeholder="Насанд хүрэгчдийн хэрэглэх хугацаа"
-            value={form.adultTime}
-            onChange={handleChange}
-            required
-            className="border-black p-2 h-[41px]"
-          />
-        </div>
-
         <div className="col-span-2 border p-3 rounded-sm border-black">
-          <h2 className="font-semibold mb-2">Хүүхдийн тунгийн мэдээлэл</h2>
-          {children.map((child, id) => (
+          <h2 className="font-semibold mb-2">Хэрэглэх тунгийн мэдээлэл</h2>
+          {doseUsage.map((child, id) => (
             <div key={id} className="grid grid-cols-4 gap-2 mb-2 ">
               <Input
                 placeholder="Нас"

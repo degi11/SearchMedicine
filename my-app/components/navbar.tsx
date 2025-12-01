@@ -67,8 +67,9 @@ export default function Navbar() {
             </div>
           </div>
           
-          <div className="flex justify-items-end">
-            <CartDialog/>
+          <div className="flex justify-items-end items-center">
+            <div className="flex items-center justify-center"><CartDialog/></div>
+            
             {isLoggedIn ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
