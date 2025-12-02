@@ -1,6 +1,12 @@
 import MedicineDetail from "@/components/medicine-detail";
 
-export default async function Home(props: any) {
-  const { id } = props.params;
+interface PageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default async function Page({ params }: PageProps) {
+  const { id } = await params;
   return <MedicineDetail id={id} />;
 }
