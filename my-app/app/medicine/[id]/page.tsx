@@ -6,7 +6,6 @@ interface PageProps {
   };
 }
 
-export default async function Page({ params }: PageProps) {
-  const { id } = await params;
-  return <MedicineDetail id={id} />;
+export default function Page({ params }: PageProps) {
+  return <MedicineDetail id={params.id} />;
 }
