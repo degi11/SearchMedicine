@@ -52,6 +52,7 @@ export default function MedicineDetail({ id }: { id: string }) {
     addToCart({
       id: medicine.id ?? "",
       name: medicine.tradeNameMN ?? "",
+      storageCo: medicine.storageConditions ?? "",
       quantity: 1,
     });
   };
@@ -152,8 +153,6 @@ export default function MedicineDetail({ id }: { id: string }) {
       case "Хэрэглэх арга тун":
         return (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3 justify-center">
-            
-
             <div className="bg-green-50 p-1 border border-green-100 rounded-xl">
               <div className="w-full flex items-center justify-center mb-4">
                 <p className="text-xl">Уух тун</p>
@@ -222,11 +221,7 @@ export default function MedicineDetail({ id }: { id: string }) {
             </h1>
             <div>
               <p className="text-xl font-semibold">No{medicine.no}</p>
-              {medicine.conditionsOfIssue ? (
-                <p className="text-xl">Жортой</p>
-              ) : (
-                <p className="text-xl">Жоргүй</p>
-              )}
+              <p className="text-xl">{medicine.conditionsOfIssue}</p>
             </div>
           </div>
 
@@ -234,7 +229,7 @@ export default function MedicineDetail({ id }: { id: string }) {
             <div className="w-full flex items-center gap-3 lg:pl-5 p-3 rounded-md">
               <PillIcon className="text-[#00AC94]" />
               <div>
-                <p className="text-xl">{medicine.dosage}</p>
+                <p className="text-xl justify-end-safe">{medicine.dosage}</p>
                 <p className="text-xl text-gray-700">{medicine.dosageForm}</p>
               </div>
             </div>
@@ -259,6 +254,7 @@ export default function MedicineDetail({ id }: { id: string }) {
             <EditButton medicine={medicine} />
             <DeleteButton medicineId={medicine.id} />
           </div>
+          <p className="text-xl">{medicine.storageConditions}</p>
         </div>
       </div>
 

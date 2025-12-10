@@ -5,6 +5,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 export type CartItem = {
   id: string;
   name: string;
+  storageCo: string;
   quantity: number;
 };
 
@@ -12,7 +13,7 @@ export type CartContextType = {
   cart: CartItem[];
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
-    isInCart: (id: string) => boolean;
+  isInCart: (id: string) => boolean;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);

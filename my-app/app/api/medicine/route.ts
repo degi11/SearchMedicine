@@ -47,6 +47,7 @@ export async function POST(req: Request) {
         conditionsOfIssue: data.conditionsOfIssue,
         country: data.country,
         registered: data.registered,
+        storageConditions: data.storageConditions,
         indicationsForUse: data.indicationsForUse,
         prohibitionsPrecautions: data.prohibitionsPrecautions,
         sideEffects: data.sideEffects,
@@ -61,7 +62,9 @@ export async function POST(req: Request) {
   } catch (err) {
     console.error("Medicine create error:", err);
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Эм үүсгэхэд алдаа гарлаа" },
+      {
+        error: err instanceof Error ? err.message : "Эм үүсгэхэд алдаа гарлаа",
+      },
       { status: 500 }
     );
   }
@@ -92,6 +95,7 @@ export async function PUT(req: Request) {
         conditionsOfIssue: data.conditionsOfIssue,
         country: data.country,
         registered: data.registered,
+        storageConditions: data.storageConditions,
         indicationsForUse: data.indicationsForUse,
         prohibitionsPrecautions: data.prohibitionsPrecautions,
         sideEffects: data.sideEffects,
@@ -106,7 +110,10 @@ export async function PUT(req: Request) {
   } catch (err) {
     console.error("Medicine update error:", err);
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Эм шинэчлэхэд алдаа гарлаа" },
+      {
+        error:
+          err instanceof Error ? err.message : "Эм шинэчлэхэд алдаа гарлаа",
+      },
       { status: 500 }
     );
   }
@@ -134,7 +141,9 @@ export async function DELETE(req: Request) {
   } catch (err) {
     console.error("Medicine delete error:", err);
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Эм устгахад алдаа гарлаа" },
+      {
+        error: err instanceof Error ? err.message : "Эм устгахад алдаа гарлаа",
+      },
       { status: 500 }
     );
   }

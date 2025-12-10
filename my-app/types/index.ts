@@ -6,6 +6,7 @@ export interface MedicineCardProrps {
   conditionsOfIssue: boolean | null;
   registered: string | null;
   country: string | null;
+  storageConditions: string | null;
   image: string | null;
   id: string | null;
 }
@@ -42,6 +43,7 @@ export interface EditButtonProps {
 export interface CartItem {
   id: string;
   name: string;
+  storageCo: string;
   quantity?: number;
 }
 

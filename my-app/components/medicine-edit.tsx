@@ -32,14 +32,6 @@ export default function EditButton({ medicine }: EditButtonProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const [prohibitionsPrecautions] = useState([
-    { prohibitions: "", precautions: "" },
-  ]);
-
-  const [interactionWithOtherDrugs] = useState([
-    { positive: "", negative: "" },
-  ]);
-
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
     if (savedToken) {
@@ -62,15 +54,6 @@ export default function EditButton({ medicine }: EditButtonProps) {
   ) => {
     const { name, value } = e.target;
     setForm((prev: any) => ({ ...prev, [name]: value }));
-  };
-
-  const handleChangeSelect = (e: any) => {
-    const { name, value } = e.target;
-
-    setForm((prev: any) => ({
-      ...prev,
-      [name]: value === "true" ? true : value === "false" ? false : value,
-    }));
   };
 
   const handleSubmit = async () => {
@@ -153,18 +136,6 @@ export default function EditButton({ medicine }: EditButtonProps) {
                   />
                 </div>
               ))}
-              <Label htmlFor="conditionsOfIssue" className="">
-                Жортой, Жоргүй
-              </Label>
-              <select
-                name="conditionsOfIssue"
-                value={String(form.conditionsOfIssue)}
-                onChange={handleChangeSelect}
-                className="border border-gray-200 rounded-sm p-2"
-              >
-                <option value="false">Жоргүй</option>
-                <option value="true">Жортой</option>
-              </select>
 
               {EditMedicineTextareaArrey.map((el, i) => (
                 <div key={i}>
@@ -243,7 +214,7 @@ export default function EditButton({ medicine }: EditButtonProps) {
                   />
                 </div>
               ))}
-             
+
               <div>
                 <Label className="font-semibold mb-2">Уух тун</Label>
                 {form.doseUsage?.map((el: any, i: number) => (
@@ -254,7 +225,10 @@ export default function EditButton({ medicine }: EditButtonProps) {
                       onChange={(e) => {
                         const updated = [...form.doseUsage];
                         updated[i].age = e.target.value;
-                        setForm((prev: any) => ({ ...prev, doseUsage: updated }));
+                        setForm((prev: any) => ({
+                          ...prev,
+                          doseUsage: updated,
+                        }));
                       }}
                     />
                     <Input
@@ -263,7 +237,10 @@ export default function EditButton({ medicine }: EditButtonProps) {
                       onChange={(e) => {
                         const updated = [...form.doseUsage];
                         updated[i].dose = e.target.value;
-                        setForm((prev: any) => ({ ...prev, doseUsage: updated }));
+                        setForm((prev: any) => ({
+                          ...prev,
+                          doseUsage: updated,
+                        }));
                       }}
                     />
                     <Input
@@ -272,7 +249,10 @@ export default function EditButton({ medicine }: EditButtonProps) {
                       onChange={(e) => {
                         const updated = [...form.doseUsage];
                         updated[i].time = e.target.value;
-                        setForm((prev: any) => ({ ...prev, doseUsage: updated }));
+                        setForm((prev: any) => ({
+                          ...prev,
+                          doseUsage: updated,
+                        }));
                       }}
                     />
                     <Button

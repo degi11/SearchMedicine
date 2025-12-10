@@ -1,10 +1,6 @@
 "use client";
 import { MedicineCardProrps } from "@/types";
-import {
-  BookmarkCheck,
-  BookmarkPlus,
-  ImageOff,
-} from "lucide-react";
+import { BookmarkCheck, BookmarkPlus, ImageOff } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useCart } from "./cart-context";
@@ -17,6 +13,7 @@ export default function MedicineCard({
   dosageForm,
   registered,
   country,
+  storageConditions,
   id,
   image,
 }: MedicineCardProrps) {
@@ -32,6 +29,7 @@ export default function MedicineCard({
     addToCart({
       id: id ?? "",
       name: medicineName ?? "",
+      storageCo: storageConditions ?? "",
       quantity: 1,
     });
   };
@@ -57,11 +55,9 @@ export default function MedicineCard({
         )}
 
         <div className="absolute top-3 right-3 bg-white rounded-lg px-2 shadow-md">
-          {conditionsOfIssue ? (
-            <span className="text-sm font-semibold text-green-600">Жортой</span>
-          ) : (
-            <span className="text-sm font-semibold text-green-600">Жоргүй</span>
-          )}
+          <span className="text-sm font-semibold text-green-600">
+            {conditionsOfIssue}
+          </span>
         </div>
 
         <button
@@ -84,15 +80,14 @@ export default function MedicineCard({
           </h1>
           <p className="font-bold text-sm sm:text-base">№{no}</p>
         </div>
-
         <p className="font-medium text-sm sm:text-base line-clamp-1">
           {dosage}
         </p>
         <p className="font-medium text-sm sm:text-base line-clamp-1">
           {dosageForm}
         </p>
-        <div className="text-sm sm:text-base line-clamp-1">{country}</div>
-        <div className="text-sm sm:text-base line-clamp-1">{registered}</div>
+        <p className="text-sm sm:text-base line-clamp-1">{country}</p>
+        <p className="text-sm sm:text-base line-clamp-1">{registered}</p>
       </div>
     </div>
   );

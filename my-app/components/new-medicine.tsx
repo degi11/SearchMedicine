@@ -22,9 +22,10 @@ export default function NewMedicine() {
     dosage: "",
     no: "",
     dosageForm: "",
-    conditionsOfIssue: "false",
+    conditionsOfIssue: "",
     country: "",
     registered: "",
+    storageConditions: "",
     indicationsForUse: "",
     prohibitions: "",
     precautions: "",
@@ -160,6 +161,7 @@ export default function NewMedicine() {
           conditionsOfIssue: "false",
           country: "",
           registered: "",
+          storageConditions: "",
           indicationsForUse: "",
           prohibitions: "",
           precautions: "",
@@ -261,17 +263,14 @@ export default function NewMedicine() {
             className="border-black p-2 h-[41px]"
           />
         ))}
-
-        <select
-          name="conditionsOfIssue"
-          value={form.conditionsOfIssue}
-          onChange={handleChange}
-          required
-          className=" border border-black rounded-sm p-2"
-        >
-          <option value="false">Жоргүй</option>
-          <option value="true">Жортой</option>
-        </select>
+        <div>
+          <Input
+            name="storageConditions"
+            placeholder="Хадгалах нөхцөл"
+            value={form.storageConditions}
+            onChange={handleChange}
+            className="border-black p-2 h-[41px]"/>
+        </div>
 
         {NewMedicineCreateTextareaArrey.map((el, id) => (
           <Textarea

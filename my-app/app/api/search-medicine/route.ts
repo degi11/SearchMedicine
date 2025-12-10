@@ -42,6 +42,7 @@ export async function GET(req: Request) {
         dosageForm: true,
         registered: true,
         country: true,
+        storageConditions: true,
         image: true,
       },
       take: 50,

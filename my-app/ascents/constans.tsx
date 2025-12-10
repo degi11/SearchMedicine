@@ -37,6 +37,10 @@ export const NewMedicineCreateInputTextArrey = [
     name: "registered",
     placeholder: "Бүртгэсэн байгууллага",
   },
+  {
+    name: "conditionsOfIssue",
+    placeholder: "Жор",
+  },
 ];
 
 export const NewMedicineCreateTextareaArrey = [
@@ -126,5 +130,13 @@ export const EditMedicineInputTextArrey = [
     name: "registered",
     label: "Бүртгэсэн байгууллага",
   },
+  {
+    name: "conditionsOfIssue",
+    label: "Уух заалт"
+  },
+  {
+    name: "storageConditions",
+    label: "Хадгалах нөхцөл"
+  }
 ];
 

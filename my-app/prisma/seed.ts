@@ -11,9 +11,10 @@ const medicineData: Prisma.MedicineCreateInput[] = [
     dosage: "500мг",
     no: 10,
     dosageForm: "Шахмал",
-    conditionsOfIssue: false,
+    conditionsOfIssue: "Жоргүй",
     country: "Монгол",
     registered: "Ариун Монгол ХХК",
+    storageConditions: "Сэрүүн нөхцөлд",
     indicationsForUse: "Шүд, толгой, мэдрэлийн судлын өвдөлт, төрөл бүрийн гаралтай халууралт.",
     prohibitionsPrecautions: [
       {

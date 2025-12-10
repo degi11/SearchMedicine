@@ -40,7 +40,7 @@ export default function Search() {
       } finally {
         setLoading(false);
       }
-    }, 200);
+    }, 400);
   };
 
   useEffect(() => {
@@ -99,6 +99,7 @@ export default function Search() {
             dosageForm={el.dosageForm || ""}
             registered={el.registered || ""}
             country={el.country || ""}
+            storageConditions={el.storageConditions || ""}
             image={el.image || null}
           />
         ))}
