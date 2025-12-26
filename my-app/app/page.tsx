@@ -1,9 +1,10 @@
-import Search from "@/components/search";
+import HomeClient from "@/components/homeClient";
 
-export default async function Home() {
+
+export default function Home() {
   return (
     <div className="flex justify-center h-screen w-full">
-      <Search />
+      <HomeClient />
     </div>
   );
 }

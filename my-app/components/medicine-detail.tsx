@@ -4,8 +4,10 @@ import {
   AlertCircle,
   AlertTriangle,
   Globe,
+  ImageOff,
   PillIcon,
   ShieldAlert,
+  ThermometerSnowflake,
   ThumbsDown,
   ThumbsUp,
 } from "lucide-react";
@@ -162,7 +164,7 @@ export default function MedicineDetail({ id }: { id: string }) {
 
               {medicine.doseUsage[0].dose?.length ? (
                 medicine.doseUsage.map((el: DoseUsage, id: number) => (
-                  <div key={id} className=" ">
+                  <div key={id}>
                     <div className="grid grid-cols-3 mb-2 mt-2">
                       <div className="border-r border-gray-400 p-1 pl-4">
                         <p>{el.age}</p>
@@ -181,7 +183,7 @@ export default function MedicineDetail({ id }: { id: string }) {
                 ))
               ) : (
                 <p className="text-gray-600 p-3">
-                  Хүүхдийн тунгийн мэдээлэл байхгүй.
+                  Хэрэглэх арга тунгийн мэдээлэл байхгүй.
                 </p>
               )}
             </div>
@@ -203,24 +205,31 @@ export default function MedicineDetail({ id }: { id: string }) {
     <div className="max-w-7xl mx-auto mt-10 mb-40 px-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div className="relative w-full h-80 md:h-[400px]">
-          <Image
-            src={`${medicine.image.replace(
-              "/upload/",
-              "/upload/q_100,f_auto/"
-            )}`}
-            alt={medicine.tradeNameEN}
-            fill
-            className="object-cover rounded-xl"
-          />
+          {medicine.imageUrl ? (
+            <Image
+              src={`${medicine.imageUrl.replace(
+                "/upload/",
+                "/upload/q_100,f_auto/"
+              )}`}
+              alt={medicine.tradeNameEN}
+              fill
+              className="object-cover rounded-xl"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <ImageOff className="text-green-200" size={60} />
+            </div>
+          )}
         </div>
-
         <div className="flex flex-col gap-6">
-          <div className="flex flex-col sm:flex-row justify-between gap-4">
+          <div className="flex flex-col sm:flex-row justify-between gap-4 md:items-center lg:items-center">
             <h1 className="text-2xl md:text-3xl lg:text-3xl font-semibold">
               {medicine.tradeNameMN}
             </h1>
             <div>
-              <p className="text-xl font-semibold">No{medicine.no}</p>
+              <p className="text-xl font-semibold lg:justify-self-end">
+                No{medicine.no}
+              </p>
               <p className="text-xl">{medicine.conditionsOfIssue}</p>
             </div>
           </div>
@@ -254,7 +263,11 @@ export default function MedicineDetail({ id }: { id: string }) {
             <EditButton medicine={medicine} />
             <DeleteButton medicineId={medicine.id} />
           </div>
-          <p className="text-xl">{medicine.storageConditions}</p>
+          <div className="flex items-center gap-2 border border-gray-400 rounded-2xl p-3">
+            <ThermometerSnowflake/>
+          <p className="text-xl">{medicine.storageConditions}</p>  
+          </div>
+          
         </div>
       </div>
 

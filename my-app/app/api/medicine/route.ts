@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import jwt from "jsonwebtoken";
+import cloudinary from "@/lib/cloudinary";
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
@@ -54,7 +55,8 @@ export async function POST(req: Request) {
         interactionWithOtherDrugs: data.interactionWithOtherDrugs,
         useDuringPregnancyAndLactation: data.useDuringPregnancyAndLactation,
         doseUsage: data.doseUsage,
-        image: data.image,
+        imageUrl: data.imageUrl,
+        imagePublicId: data.imagePublicId,
       },
     });
 
@@ -82,6 +84,22 @@ export async function PUT(req: Request) {
       );
     }
 
+     const existing = await prisma.medicine.findUnique({
+      where: { id: data.id },
+    });
+
+    if (!existing) {
+      return NextResponse.json({ error: "Эм олдсонгүй" }, { status: 404 });
+    }
+
+    if (
+      data.imagePublicId &&
+      existing.imagePublicId &&
+      data.imagePublicId !== existing.imagePublicId
+    ) {
+      await cloudinary.uploader.destroy(existing.imagePublicId);
+    }
+
     const updated = await prisma.medicine.update({
       where: { id: data.id },
       data: {
@@ -102,7 +120,8 @@ export async function PUT(req: Request) {
         interactionWithOtherDrugs: data.interactionWithOtherDrugs,
         useDuringPregnancyAndLactation: data.useDuringPregnancyAndLactation,
         doseUsage: data.doseUsage,
-        image: data.image,
+        imageUrl: data.imageUrl,
+        imagePublicId: data.imagePublicId,
       },
     });
 
@@ -131,6 +150,24 @@ export async function DELETE(req: Request) {
         { error: "ID илгээгдээгүй байна" },
         { status: 400 }
       );
+    }
+
+    const medicine = await prisma.medicine.findUnique({
+      where: { id },
+      select: {
+        imagePublicId: true,
+      },
+    });
+
+    if (!medicine) {
+      return NextResponse.json(
+        { error: "Эм олдсонгүй" },
+        { status: 404 }
+      );
+    }
+
+    if (medicine.imagePublicId) {
+      await cloudinary.uploader.destroy(medicine.imagePublicId);
     }
 
     await prisma.medicine.delete({

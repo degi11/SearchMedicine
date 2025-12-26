@@ -3,6 +3,7 @@
 import {
   NewMedicineCreateInputTextArrey,
   NewMedicineCreateTextareaArrey,
+  StorageConditionSelections,
 } from "@/ascents/constans";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,6 +41,8 @@ export default function NewMedicine() {
   const [loading, setLoading] = useState(true);
 
   const [url, setUrl] = useState<string | null>(null);
+  const [publicId, setPublicId] = useState<string | null>(null);
+
   const [uploading, setUploading] = useState(false);
   const [doseUsage, setDoseUsage] = useState([{ age: "", dose: "", time: "" }]);
 
@@ -51,17 +54,17 @@ export default function NewMedicine() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleChildChange = (id: number, field: string, value: string) => {
+  const handleDoseUsage = (id: number, field: string, value: string) => {
     const updated = [...doseUsage];
     updated[id][field as keyof (typeof updated)[number]] = value;
     setDoseUsage(updated);
   };
 
-  const addChild = () => {
+  const addDoseUsage = () => {
     setDoseUsage([...doseUsage, { age: "", dose: "", time: "" }]);
   };
 
-  const removeChildDose = (id: number) => {
+  const removeDoseUsage = (id: number) => {
     const updated = [...doseUsage];
     updated.splice(id, 1);
     setDoseUsage(updated.length ? updated : [{ age: "", dose: "", time: "" }]);
@@ -88,6 +91,7 @@ export default function NewMedicine() {
 
       if (!res.ok) throw new Error(data.error?.message || "Upload failed");
       setUrl(data.secure_url);
+      setPublicId(data.public_id);
     } catch (err) {
       console.error("Upload error:", err);
       toast.error("Зураг илгээхэд алдаа гарлаа.");
@@ -127,10 +131,10 @@ export default function NewMedicine() {
         },
         body: JSON.stringify({
           ...form,
-          image: url,
+          imageUrl: url,
+          imagePublicId: publicId,
           no: parseInt(form.no),
           barcode: form.barcode ? BigInt(form.barcode).toString() : null,
-          conditionsOfIssue: form.conditionsOfIssue === "true",
           prohibitionsPrecautions: [
             { prohibitions: form.prohibitions, precautions: form.precautions },
           ],
@@ -158,7 +162,7 @@ export default function NewMedicine() {
           dosage: "",
           no: "",
           dosageForm: "",
-          conditionsOfIssue: "false",
+          conditionsOfIssue: "",
           country: "",
           registered: "",
           storageConditions: "",
@@ -263,14 +267,18 @@ export default function NewMedicine() {
             className="border-black p-2 h-[41px]"
           />
         ))}
-        <div>
-          <Input
-            name="storageConditions"
-            placeholder="Хадгалах нөхцөл"
-            value={form.storageConditions}
-            onChange={handleChange}
-            className="border-black p-2 h-[41px]"/>
-        </div>
+
+        <select
+          name="storageConditions"
+          value={form.storageConditions}
+          onChange={handleChange}
+          className="border p-2 rounded-sm border-black"
+        >
+          <option value="">-- Хадгалах нөхцөл сонгох --</option>
+          {StorageConditionSelections.map((el, i) => (
+            <option key={i} value={el}>{el}</option>
+          ))}
+        </select>
 
         {NewMedicineCreateTextareaArrey.map((el, id) => (
           <Textarea
@@ -290,25 +298,25 @@ export default function NewMedicine() {
               <Input
                 placeholder="Нас"
                 value={child.age}
-                onChange={(e) => handleChildChange(id, "age", e.target.value)}
+                onChange={(e) => handleDoseUsage(id, "age", e.target.value)}
                 className="border-black"
               />
               <Input
                 placeholder="Тун"
                 value={child.dose}
-                onChange={(e) => handleChildChange(id, "dose", e.target.value)}
+                onChange={(e) => handleDoseUsage(id, "dose", e.target.value)}
                 className="border-black p-2"
               />
               <Input
                 placeholder="Хугацаа"
                 value={child.time}
-                onChange={(e) => handleChildChange(id, "time", e.target.value)}
+                onChange={(e) => handleDoseUsage(id, "time", e.target.value)}
                 className="border-black p-2"
               />
               <div>
                 <Button
                   type="button"
-                  onClick={() => removeChildDose(id)}
+                  onClick={() => removeDoseUsage(id)}
                   className="px-2 py-1 rounded col-span-3 bg-red-500"
                 >
                   <CircleMinus />
@@ -318,7 +326,7 @@ export default function NewMedicine() {
           ))}
           <Button
             type="button"
-            onClick={addChild}
+            onClick={addDoseUsage}
             className="px-3 py-1 rounded bg-green-500"
           >
             <PlusCircle />

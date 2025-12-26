@@ -15,7 +15,7 @@ export default function MedicineCard({
   country,
   storageConditions,
   id,
-  image,
+  imageUrl,
 }: MedicineCardProrps) {
   const router = useRouter();
   const { addToCart, isInCart } = useCart();
@@ -40,9 +40,9 @@ export default function MedicineCard({
       className="flex flex-col rounded-2xl w-full h-auto bg-white overflow-hidden shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-100 hover:border-green-200 group"
     >
       <div className="relative h-48 overflow-hidden bg-linear-to-br from-green-50 to-blue-50">
-        {image ? (
+        {imageUrl ? (
           <Image
-            src={image}
+            src={imageUrl}
             alt={medicineName || "Medicine image"}
             width={250}
             height={250}

@@ -9,8 +9,8 @@ export function RecipePrint({ cart, inputs }: PrintRecipeProps) {
         <Image
           src="https://res.cloudinary.com/dqrd7tpyd/image/upload/v1764811369/h05zbzifinfcybrqb8h9.png"
           alt="EntoPharmaLogo"
-          width={140}
-          height={120}
+          width={100}
+          height={80}
           className="object-cover"
         />
         <h2 className="font-bold text-lg text-gray-800"></h2>
@@ -19,7 +19,10 @@ export function RecipePrint({ cart, inputs }: PrintRecipeProps) {
       {cart.map((el) => (
         <div key={el.id} className="flex flex-col border-b py-1 text-sm">
           <p className="font-semibold">{el.name}</p>
-          {inputs[el.id]?.dose && <p>Уух заавар: {inputs[el.id].dose}</p>}
+          {inputs[el.id]?.doseType && <p>{inputs[el.id].doseType}</p>}
+          {inputs[el.id]?.howToUse && (
+            <p>Хэрэглэх заавар: {inputs[el.id].howToUse}</p>
+          )}
           <div className="flex gap-3">
             {inputs[el.id]?.times && (
               <p>

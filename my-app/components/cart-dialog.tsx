@@ -9,11 +9,22 @@ import {
 import { useCart } from "./cart-context";
 import { ReceiptText, Trash } from "lucide-react";
 import { Button } from "./ui/button";
-import { useState } from "react";
+import React, { useState } from "react";
 import { RecipePrint } from "./print-recipe";
+import { DoseAndUsagePrint, HowToUseDills } from "@/ascents/constans";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "./ui/command";
 
 export default function CartDialog() {
   const { cart, removeFromCart } = useCart();
+
+  const [open, setOpen] = React.useState(false);
+  const [openTwo, setOpenTwo] = React.useState(false);
 
   const [inputs, setInputs] = useState<{
     [key: string]: {
@@ -21,6 +32,8 @@ export default function CartDialog() {
       times?: string;
       timesOption?: string;
       perDay?: string;
+      doseType?: string;
+      howToUse?: string;
     };
   }>({});
 
@@ -58,14 +71,73 @@ export default function CartDialog() {
               <div className="flex flex-col gap-2">
                 <p className="font-semibold text-xl no-print">{el.name}</p>
                 <div className="w-full flex flex-col gap-2 text-sm">
-                  <input
-                    value={inputs[el.id]?.dose || ""}
-                    onChange={(e) =>
-                      handleInputChange(el.id, "dose", e.target.value)
-                    }
-                    className="no-print border p-1 rounded w-full"
-                    placeholder="Тун заавар"
-                  />
+                  
+                  <Popover open={openTwo} onOpenChange={setOpenTwo}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-full justify-between"
+                      >
+                        {inputs[el.id]?.doseType || "-- Хэзээ хэрэглэх --"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <Command>
+                        <CommandList>
+                          <CommandGroup>
+                            {DoseAndUsagePrint.map((item, i) => (
+                              <CommandItem
+                                key={i}
+                                value={item}
+                                onSelect={(value) => {
+                                  handleInputChange(el.id, "doseType", value);
+                                  setOpenTwo(false);
+                                }}
+                                className="cursor-pointer border-b border-black py-2 rounded-none"
+                              >
+                                {item}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+
+
+
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className="w-[200px] justify-between"
+                      >
+                        {inputs[el.id]?.howToUse || "-- Хэрхэн хэрэглэх --"}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[200px] p-0">
+                      <Command>
+                        <CommandList>
+                          <CommandGroup>
+                            {HowToUseDills.map((item, i) => (
+                              <CommandItem
+                                key={i}
+                                value={item}
+                                onSelect={(value) => {
+                                  handleInputChange(el.id, "howToUse", value);
+                                  setOpen(false);
+                                }}
+                                className="cursor-pointer border-b border-black p-2 rounded-none"
+                              >
+                                {item}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+
                   <div className="flex gap-2">
                     <div className="flex items-center gap-2">
                       <input
@@ -116,7 +188,10 @@ export default function CartDialog() {
           ))}
 
           {cart.length > 0 && (
-            <Button onClick={() => window.print()} className="no-print bg-[#00AC94]">
+            <Button
+              onClick={() => window.print()}
+              className="no-print bg-[#00AC94]"
+            >
               Хэвлэх
             </Button>
           )}

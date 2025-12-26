@@ -100,7 +100,7 @@ export default function Search() {
             registered={el.registered || ""}
             country={el.country || ""}
             storageConditions={el.storageConditions || ""}
-            image={el.image || null}
+            imageUrl={el.imageUrl || null}
           />
         ))}
       </div>

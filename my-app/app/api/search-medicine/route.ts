@@ -43,7 +43,7 @@ export async function GET(req: Request) {
         registered: true,
         country: true,
         storageConditions: true,
-        image: true,
+        imageUrl: true,
       },
       take: 50,
       orderBy: { createdAt: "desc" },

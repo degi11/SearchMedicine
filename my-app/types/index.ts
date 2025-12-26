@@ -7,7 +7,7 @@ export interface MedicineCardProrps {
   registered: string | null;
   country: string | null;
   storageConditions: string | null;
-  image: string | null;
+  imageUrl: string | null;
   id: string | null;
 }
 
@@ -29,7 +29,7 @@ export interface IODrugs {
 
 export interface PPprops {
   prohibitions: string;
-  precautions: string
+  precautions: string;
 }
 
 export interface DeleteButtonProps {
@@ -49,5 +49,15 @@ export interface CartItem {
 
 export interface PrintRecipeProps {
   cart: CartItem[];
-  inputs: Record<string, { dose?: string; times?: string; timesOption?: string; perDay?: string }>;
+  inputs: Record<
+    string,
+    {
+      dose?: string;
+      times?: string;
+      timesOption?: string;
+      perDay?: string;
+      doseType?: string;
+      howToUse?: string;
+    }
+  >;
 }

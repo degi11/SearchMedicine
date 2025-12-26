@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "sonner";
 import { EditButtonProps } from "@/types";
-import { CircleMinus, PlusCircle } from "lucide-react";
+import { CircleMinus, ImageIcon, PlusCircle } from "lucide-react";
 import {
   EditMedicineInputTextArrey,
   EditMedicineTextareaArrey,
@@ -31,6 +31,12 @@ export default function EditButton({ medicine }: EditButtonProps) {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const [newImageUrl, setNewImageUrl] = useState<string | null>(null);
+  const [newPublicId, setNewPublicId] = useState<string | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
@@ -56,28 +62,64 @@ export default function EditButton({ medicine }: EditButtonProps) {
     setForm((prev: any) => ({ ...prev, [name]: value }));
   };
 
+  const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
+  const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET!;
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setSelectedFile(file);
+    setPreviewUrl(URL.createObjectURL(file));
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/medicine?id=${medicine.id}`, {
+      let uploadedImage = {
+        imageUrl: form.imageUrl,
+        imagePublicId: form.imagePublicId,
+      };
+
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        formData.append("upload_preset", UPLOAD_PRESET);
+
+        const res = await fetch(
+          `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        const data = await res.json();
+        uploadedImage = {
+          imageUrl: data.secure_url,
+          imagePublicId: data.public_id,
+        };
+      }
+
+      const res = await fetch(`/api/medicine`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          ...uploadedImage,
+        }),
       });
 
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data.error || "Засварлах явцад алдаа гарлаа");
-      }
+      if (!res.ok) throw new Error("Алдаа гарлаа");
 
-      toast.success("Эмийн мэдээлэл амжилттай шинэчлэгдлээ");
+      toast.success("Эмийн мэдээлэл шинэчлэгдлээ");
       setOpen(false);
       router.refresh();
     } catch (err: any) {
-      toast.error(err.message || "Серверийн алдаа гарлаа");
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
@@ -216,6 +258,42 @@ export default function EditButton({ medicine }: EditButtonProps) {
               ))}
 
               <div>
+                <div className="col-span-2 border p-3 rounded-md border-black mb-3">
+                  <label className="font-semibold mb-2 flex items-center gap-2">
+                    <ImageIcon className="w-5 h-5" /> Эмийн зураг
+                  </label>
+                  <div className="flex gap-2">
+                    {(previewUrl || form.imageUrl) && (
+                    <img
+                      src={previewUrl ?? form.imageUrl}
+                      alt="Medicine"
+                      className="max-h-24 object-cover rounded-md border"
+                    />
+                  )}
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() =>
+                        document.getElementById("imageInput")?.click()
+                      }
+                      className="items-end-safe"
+                    >
+                      Зураг солих
+                    </Button>
+
+                    <input
+                      id="imageInput"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageSelect}
+                      className="hidden"
+                    />
+                  </div>
+
+                  
+                </div>
+
                 <Label className="font-semibold mb-2">Уух тун</Label>
                 {form.doseUsage?.map((el: any, i: number) => (
                   <div key={i} className="grid grid-cols-4 gap-1 mb-2">
@@ -231,6 +309,7 @@ export default function EditButton({ medicine }: EditButtonProps) {
                         }));
                       }}
                     />
+
                     <Input
                       placeholder="Тун"
                       value={el.dose}
@@ -243,6 +322,7 @@ export default function EditButton({ medicine }: EditButtonProps) {
                         }));
                       }}
                     />
+
                     <Input
                       placeholder="Хугацаа"
                       value={el.time}
@@ -255,6 +335,7 @@ export default function EditButton({ medicine }: EditButtonProps) {
                         }));
                       }}
                     />
+
                     <Button
                       type="button"
                       onClick={() => removeDoseUsage(i)}
