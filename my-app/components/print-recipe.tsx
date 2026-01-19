@@ -1,17 +1,18 @@
 import { PrintRecipeProps } from "@/types";
 import EntoPharmaLogo from "../ascents/ENTO Pharm logo jijig.png";
-import Image from "next/image";
+import PharmaBlackIcon from "../ascents/ENTO pharma logo khar.png"
 
 export function RecipePrint({ cart, inputs }: PrintRecipeProps) {
   return (
     <div className="print-area print-only">
       <div className="flex gap-2">
-        <Image
-          src="https://res.cloudinary.com/dqrd7tpyd/image/upload/v1764811369/h05zbzifinfcybrqb8h9.png"
+        <img
+          src={PharmaBlackIcon.src}
           alt="EntoPharmaLogo"
           width={100}
           height={80}
-          className="object-cover"
+          style={{ display: "block" }}
+          loading="eager"
         />
         <h2 className="font-bold text-lg text-gray-800"></h2>
       </div>

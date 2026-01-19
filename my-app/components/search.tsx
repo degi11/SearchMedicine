@@ -10,13 +10,22 @@ export default function Search() {
   const [barcode, setBarcode] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const debounceRef = useRef<number | null>(null);
+  const [hydrated, setHydrated] = useState(false);
 
+  const debounceRef = useRef<number | null>(null);
   const barcodeRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    barcodeRef.current?.focus();
+    setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+
+    requestAnimationFrame(() => {
+      barcodeRef.current?.focus();
+    });
+  }, [hydrated]);
 
   const triggerSearch = (q: string, bc: string) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -51,6 +60,8 @@ export default function Search() {
     triggerSearch(name, barcode);
   }, [name, barcode]);
 
+  if (!hydrated) return null;
+
   return (
     <div className="w-7xl mx-auto mt-8 p-4">
       <form className="grid grid-rows-2 md:grid-cols-2 lg:grid-cols-2 gap-4">
@@ -81,7 +92,7 @@ export default function Search() {
       </form>
 
       {loading && (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2 mt-4">
           <Spinner />
           <p className="text-gray-500">Хайж байна...</p>
         </div>

@@ -13,6 +13,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Spinner } from "./ui/spinner";
 import { toast } from "sonner";
+import { DoseUsageInputs } from "./dose-usage-inputs";
+import { DiseaseInvoice } from "@/types";
 
 export default function NewMedicine() {
   const [form, setForm] = useState({
@@ -44,7 +46,17 @@ export default function NewMedicine() {
   const [publicId, setPublicId] = useState<string | null>(null);
 
   const [uploading, setUploading] = useState(false);
-  const [doseUsage, setDoseUsage] = useState([{ age: "", dose: "", time: "" }]);
+  const [doseUsage, setDoseUsage] = useState<DiseaseInvoice[]>([
+    {
+      diseaseName: "",
+      stages: [
+        {
+          name: "",
+          rows: [{ age: "", dose: "", useTime: "" }],
+        },
+      ],
+    },
+  ]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -52,22 +64,6 @@ export default function NewMedicine() {
     >
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleDoseUsage = (id: number, field: string, value: string) => {
-    const updated = [...doseUsage];
-    updated[id][field as keyof (typeof updated)[number]] = value;
-    setDoseUsage(updated);
-  };
-
-  const addDoseUsage = () => {
-    setDoseUsage([...doseUsage, { age: "", dose: "", time: "" }]);
-  };
-
-  const removeDoseUsage = (id: number) => {
-    const updated = [...doseUsage];
-    updated.splice(id, 1);
-    setDoseUsage(updated.length ? updated : [{ age: "", dose: "", time: "" }]);
   };
 
   const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!;
@@ -141,11 +137,7 @@ export default function NewMedicine() {
           interactionWithOtherDrugs: [
             { positive: form.positive, negative: form.negative },
           ],
-          doseUsage: doseUsage.map((c) => ({
-            age: c.age,
-            dose: c.dose,
-            time: c.time,
-          })),
+          doseUsage,
         }),
       });
 
@@ -174,7 +166,17 @@ export default function NewMedicine() {
           negative: "",
           useDuringPregnancyAndLactation: "",
         });
-        setDoseUsage([{ age: "", dose: "", time: "" }]);
+        setDoseUsage([
+          {
+            diseaseName: "",
+            stages: [
+              {
+                name: "",
+                rows: [{ age: "", dose: "", useTime: "" }],
+              },
+            ],
+          },
+        ]);
         setUrl(null);
       }
     } catch (err) {
@@ -276,7 +278,9 @@ export default function NewMedicine() {
         >
           <option value="">-- Хадгалах нөхцөл сонгох --</option>
           {StorageConditionSelections.map((el, i) => (
-            <option key={i} value={el}>{el}</option>
+            <option key={i} value={el}>
+              {el}
+            </option>
           ))}
         </select>
 
@@ -293,44 +297,7 @@ export default function NewMedicine() {
 
         <div className="col-span-2 border p-3 rounded-sm border-black">
           <h2 className="font-semibold mb-2">Хэрэглэх тунгийн мэдээлэл</h2>
-          {doseUsage.map((child, id) => (
-            <div key={id} className="grid grid-cols-4 gap-2 mb-2 ">
-              <Input
-                placeholder="Нас"
-                value={child.age}
-                onChange={(e) => handleDoseUsage(id, "age", e.target.value)}
-                className="border-black"
-              />
-              <Input
-                placeholder="Тун"
-                value={child.dose}
-                onChange={(e) => handleDoseUsage(id, "dose", e.target.value)}
-                className="border-black p-2"
-              />
-              <Input
-                placeholder="Хугацаа"
-                value={child.time}
-                onChange={(e) => handleDoseUsage(id, "time", e.target.value)}
-                className="border-black p-2"
-              />
-              <div>
-                <Button
-                  type="button"
-                  onClick={() => removeDoseUsage(id)}
-                  className="px-2 py-1 rounded col-span-3 bg-red-500"
-                >
-                  <CircleMinus />
-                </Button>
-              </div>
-            </div>
-          ))}
-          <Button
-            type="button"
-            onClick={addDoseUsage}
-            className="px-3 py-1 rounded bg-green-500"
-          >
-            <PlusCircle />
-          </Button>
+          <DoseUsageInputs value={doseUsage} onChange={setDoseUsage} />
         </div>
 
         <Button

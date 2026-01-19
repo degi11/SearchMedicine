@@ -5,15 +5,22 @@ import Search from "@/components/search";
 import HomeSkeleton from "./homeSkeleton";
 
 export default function HomeClient() {
-  const [loading, setLoading] = useState(() => {
-    if (typeof window !== "undefined") {
-      return !sessionStorage.getItem("visited");
-    }
-    return true;
-  });
+  const [hydrated, setHydrated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!loading) return;
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+
+    const visited = sessionStorage.getItem("visited");
+
+    if (visited) {
+      setLoading(false);
+      return;
+    }
 
     const timer = setTimeout(() => {
       sessionStorage.setItem("visited", "true");
@@ -21,7 +28,11 @@ export default function HomeClient() {
     }, 4000);
 
     return () => clearTimeout(timer);
-  }, [loading]);
+  }, [hydrated]);
+
+  if (!hydrated) {
+    return <HomeSkeleton />;
+  }
 
   return (
     <>

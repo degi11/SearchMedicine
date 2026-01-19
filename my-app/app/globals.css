@@ -14,6 +14,13 @@
     visibility: visible !important;
   }
 
+  @media print {
+  img {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
   .print-area {
     position: fixed !important;
     top: 0 !important;

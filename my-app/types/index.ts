@@ -61,3 +61,27 @@ export interface PrintRecipeProps {
     }
   >;
 }
+
+
+export interface DoseRow  {
+  age: string;
+  dose: string;
+  useTime: string;
+};
+
+export type DiseaseInvoice = {
+  diseaseName: string;
+  stages: {
+    name: string;
+    rows: {
+      age: string;
+      dose: string;
+      useTime: string;
+    }[];
+  }[];
+};
+
+export type DiseaseStage = {
+  name: string;
+  rows: DoseRow[];
+};

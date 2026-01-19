@@ -18,6 +18,7 @@ import { DoseUsage, IODrugs, PPprops } from "@/types";
 import DeleteButton from "./medicine-delete";
 import EditButton from "./medicine-edit";
 import { useCart } from "./cart-context";
+import { DoseUsageTable } from "./dose-usage-tabel";
 
 export default function MedicineDetail({ id }: { id: string }) {
   const [medicine, setMedicine] = useState<any>(null);
@@ -154,40 +155,7 @@ export default function MedicineDetail({ id }: { id: string }) {
         );
       case "Хэрэглэх арга тун":
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3 justify-center">
-            <div className="bg-green-50 p-1 border border-green-100 rounded-xl">
-              <div className="w-full flex items-center justify-center mb-4">
-                <p className="text-xl">Уух тун</p>
-              </div>
-
-              <span className="w-99/100 h-px bg-gray-400 block justify-self-center" />
-
-              {medicine.doseUsage[0].dose?.length ? (
-                medicine.doseUsage.map((el: DoseUsage, id: number) => (
-                  <div key={id}>
-                    <div className="grid grid-cols-3 mb-2 mt-2">
-                      <div className="border-r border-gray-400 p-1 pl-4">
-                        <p>{el.age}</p>
-                      </div>
-                      <div className="border-r border-gray-400 p-1 pl-4">
-                        <p>{el.dose}</p>
-                      </div>
-                      <div className="p-1 pl-4">
-                        <p>{el.time}</p>
-                      </div>
-                    </div>
-                    {id < medicine.doseUsage.length - 1 && (
-                      <span className="w-99/100 h-px bg-gray-400 block justify-self-center" />
-                    )}
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-600 p-3">
-                  Хэрэглэх арга тунгийн мэдээлэл байхгүй.
-                </p>
-              )}
-            </div>
-          </div>
+          <DoseUsageTable invoices={medicine.doseUsage}/>
         );
       default:
         return null;
@@ -236,7 +204,9 @@ export default function MedicineDetail({ id }: { id: string }) {
 
           <div className="w-full border-gray-400 border rounded-2xl">
             <div className="w-full flex items-center gap-3 lg:pl-5 p-3 rounded-md">
-              <PillIcon className="text-[#00AC94]" />
+              <div className="h-6 w-6">
+                <PillIcon className="text-orange-500" />
+              </div>
               <div>
                 <p className="text-xl justify-end-safe">{medicine.dosage}</p>
                 <p className="text-xl text-gray-700">{medicine.dosageForm}</p>
@@ -244,11 +214,21 @@ export default function MedicineDetail({ id }: { id: string }) {
             </div>
             <span className="w-9/10 h-px bg-gray-400 block justify-self-center" />
             <div className="w-full flex items-center gap-3 lg:pl-5 p-3 rounded-md">
-              <Globe className="text-blue-500" />
+              <div className="h-6 w-6">
+                <Globe className="text-[#00AC94]" />
+              </div>
+
               <div>
                 <p className="text-xl">{medicine.country}</p>
                 <p className="text-xl text-gray-700">{medicine.registered}</p>
               </div>
+            </div>
+            <span className="w-9/10 h-px bg-gray-400 block justify-self-center" />
+            <div className="w-full flex items-center gap-3 lg:pl-5 p-3 rounded-md">
+              <div className="h-6 w-6">
+                <ThermometerSnowflake className="text-blue-500" />
+              </div>
+              <p className="text-xl">{medicine.storageConditions}</p>
             </div>
           </div>
 
@@ -263,11 +243,6 @@ export default function MedicineDetail({ id }: { id: string }) {
             <EditButton medicine={medicine} />
             <DeleteButton medicineId={medicine.id} />
           </div>
-          <div className="flex items-center gap-2 border border-gray-400 rounded-2xl p-3">
-            <ThermometerSnowflake/>
-          <p className="text-xl">{medicine.storageConditions}</p>  
-          </div>
-          
         </div>
       </div>
 

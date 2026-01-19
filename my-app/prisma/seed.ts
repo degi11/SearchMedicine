@@ -28,15 +28,33 @@ const medicineData: Prisma.MedicineCreateInput[] = [
     ],
     useDuringPregnancyAndLactation: "Хөхүүл ба жирэмсэн эхчүүдэд болгоомжтой хэрэглэнэ.",
     doseUsage: [
-      { age: "3 сартайгаас 1 нас хүртэл", dose: "24 - 120мг", time: "4"},
-      { age: "1 - 6 настайд", dose: "120 - 240мг", time: "4"},
-      { age: "6 - 12 настайд", dose: "240мг", time: "4"},
-      { age: "насанд хүрсэн хүн", dose: "500мг", time: "4" }
+  {
+    diseaseName: "Өвдсөн үед",
+    early: [
+      {
+        section: "",
+        age: "3 сартайгаас 1 нас хүртэл",
+        dose: "24 - 120мг",
+        useTime: "4",
+      },
+      {
+        age: "6 - 12 настайд",
+        dose: "120 - 240мг",
+        useTime: "4",
+      },
+      {
+        age: "насанд хүрсэн хүн",
+        dose: "500мг",
+        useTime: "4",
+      },
     ],
+    
+  },
+],
     imageUrl: "https://res.cloudinary.com/dqrd7tpyd/image/upload/v1761550263/sjh2w1xmfdorcgw8hrxp.jpg"
   },
 ];
-
+      
 export async function main() {
   for (const m of medicineData) {
         await prisma.medicine.create({

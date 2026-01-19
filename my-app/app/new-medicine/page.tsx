@@ -1,4 +1,4 @@
-import NewMedicine from "@/components/new-medicine";
+import NewMedicine from "@/components/medicine-create";
 
 export default function Home() {
   return (
