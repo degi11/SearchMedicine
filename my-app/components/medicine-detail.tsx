@@ -14,7 +14,7 @@ import {
 import Image from "next/image";
 import { Spinner } from "./ui/spinner";
 import { useEffect, useState } from "react";
-import { DoseUsage, IODrugs, PPprops } from "@/types";
+import { IODrugs, PPprops } from "@/types";
 import DeleteButton from "./medicine-delete";
 import EditButton from "./medicine-edit";
 import { useCart } from "./cart-context";

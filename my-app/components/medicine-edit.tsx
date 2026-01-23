@@ -16,13 +16,14 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "sonner";
-import { EditButtonProps } from "@/types";
-import { CircleMinus, ImageIcon, PlusCircle } from "lucide-react";
+import { DiseaseInvoice, EditButtonProps } from "@/types";
+import { ImageIcon } from "lucide-react";
 import {
   EditMedicineInputTextArrey,
   EditMedicineTextareaArrey,
 } from "@/ascents/constans";
 import { Textarea } from "./ui/textarea";
+import { DoseUsageEditor } from "./doseUsage-edit";
 
 export default function EditButton({ medicine }: EditButtonProps) {
   const [open, setOpen] = useState(false);
@@ -32,9 +33,10 @@ export default function EditButton({ medicine }: EditButtonProps) {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const [newImageUrl, setNewImageUrl] = useState<string | null>(null);
-  const [newPublicId, setNewPublicId] = useState<string | null>(null);
-  const [uploading, setUploading] = useState(false);
+  const [doseUsage, setDoseUsage] = useState<DiseaseInvoice[]>(
+    medicine.doseUsage,
+  );
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -56,7 +58,7 @@ export default function EditButton({ medicine }: EditButtonProps) {
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    >,
   ) => {
     const { name, value } = e.target;
     setForm((prev: any) => ({ ...prev, [name]: value }));
@@ -91,7 +93,7 @@ export default function EditButton({ medicine }: EditButtonProps) {
           {
             method: "POST",
             body: formData,
-          }
+          },
         );
 
         const data = await res.json();
@@ -109,6 +111,7 @@ export default function EditButton({ medicine }: EditButtonProps) {
         },
         body: JSON.stringify({
           ...form,
+          doseUsage,
           ...uploadedImage,
         }),
       });
@@ -123,24 +126,6 @@ export default function EditButton({ medicine }: EditButtonProps) {
     } finally {
       setLoading(false);
     }
-  };
-
-  const addDoseUsage = () => {
-    setForm((prev: any) => ({
-      ...prev,
-      doseUsage: [...(prev.doseUsage || []), { age: "", dose: "", time: "" }],
-    }));
-  };
-
-  const removeDoseUsage = (index: number) => {
-    setForm((prev: any) => {
-      const updated = [...prev.doseUsage];
-      updated.splice(index, 1);
-      return {
-        ...prev,
-        doseUsage: updated.length ? updated : [{ age: "", dose: "", time: "" }],
-      };
-    });
   };
 
   return (
@@ -264,12 +249,12 @@ export default function EditButton({ medicine }: EditButtonProps) {
                   </label>
                   <div className="flex gap-2">
                     {(previewUrl || form.imageUrl) && (
-                    <img
-                      src={previewUrl ?? form.imageUrl}
-                      alt="Medicine"
-                      className="max-h-24 object-cover rounded-md border"
-                    />
-                  )}
+                      <img
+                        src={previewUrl ?? form.imageUrl}
+                        alt="Medicine"
+                        className="max-h-24 object-cover rounded-md border"
+                      />
+                    )}
 
                     <Button
                       type="button"
@@ -290,68 +275,9 @@ export default function EditButton({ medicine }: EditButtonProps) {
                       className="hidden"
                     />
                   </div>
-
-                  
                 </div>
 
-                <Label className="font-semibold mb-2">Уух тун</Label>
-                {form.doseUsage?.map((el: any, i: number) => (
-                  <div key={i} className="grid grid-cols-4 gap-1 mb-2">
-                    <Input
-                      placeholder="Нас"
-                      value={el.age}
-                      onChange={(e) => {
-                        const updated = [...form.doseUsage];
-                        updated[i].age = e.target.value;
-                        setForm((prev: any) => ({
-                          ...prev,
-                          doseUsage: updated,
-                        }));
-                      }}
-                    />
-
-                    <Input
-                      placeholder="Тун"
-                      value={el.dose}
-                      onChange={(e) => {
-                        const updated = [...form.doseUsage];
-                        updated[i].dose = e.target.value;
-                        setForm((prev: any) => ({
-                          ...prev,
-                          doseUsage: updated,
-                        }));
-                      }}
-                    />
-
-                    <Input
-                      placeholder="Хугацаа"
-                      value={el.time}
-                      onChange={(e) => {
-                        const updated = [...form.doseUsage];
-                        updated[i].time = e.target.value;
-                        setForm((prev: any) => ({
-                          ...prev,
-                          doseUsage: updated,
-                        }));
-                      }}
-                    />
-
-                    <Button
-                      type="button"
-                      onClick={() => removeDoseUsage(i)}
-                      className="w-10 rounded bg-red-500"
-                    >
-                      <CircleMinus />
-                    </Button>
-                  </div>
-                ))}
-                <Button
-                  type="button"
-                  onClick={addDoseUsage}
-                  className="px-3 py-1 rounded bg-green-500"
-                >
-                  <PlusCircle />
-                </Button>
+                <DoseUsageEditor value={doseUsage} onChange={setDoseUsage} />
               </div>
             </div>
 
