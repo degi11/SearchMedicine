@@ -1,5 +1,8 @@
 "use client";
+ 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/auth-context";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,90 +13,108 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/auth-context";
-
-export default function Login() {
-const [email, setEmail] = useState("");
+ 
+interface LoginResponse {
+  token: string;
+  role: "admin" | "user";
+  message?: string;
+}
+ 
+const ROLE_ROUTES: Record<LoginResponse["role"], string> = {
+  admin: "/admin",
+  user: "/dashboard",
+};
+ 
+export default function LoginPage() {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+ 
   const router = useRouter();
   const { loginWithToken } = useAuth();
-
-  const handleLogin = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+ 
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setError("");
-
+    setIsLoading(true);
+ 
     try {
       const res = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
-      const text = await res.text();
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        throw new Error("Invalid JSON response");
-      }
-
+ 
+      const data: LoginResponse = await res.json().catch(() => {
+        throw new Error("Серверийн хариу буруу форматтай байна.");
+      });
+ 
       if (!res.ok) {
-        setError(data.message || "Login failed");
+        setError(data.message || "Нэвтрэхэд алдаа гарлаа.");
         return;
       }
-
+ 
       loginWithToken(data.token);
-
-
-      setTimeout(() => {
-        if (data.role === "admin") {
-          router.push("/");
-        } else {
-          router.push("/");
-        }
-      }, 50);
+ 
+      router.push(ROLE_ROUTES[data.role] ?? "/");
     } catch (err) {
-      console.error("Login error:", err);
-      setError("Server error");
+      const message = err instanceof Error ? err.message : "Серверийн алдаа.";
+      setError(message);
+    } finally {
+      setIsLoading(false);
     }
   };
-  
+ 
   return (
     <Card className="w-full max-w-sm">
       <CardHeader>
-        <CardTitle>Login to your account</CardTitle>
+        <CardTitle>Нэвтрэх</CardTitle>
         <CardDescription>
-          Enter your email and password to login
+          И-мэйл болон нууц үгээ оруулна уу.
         </CardDescription>
       </CardHeader>
+ 
       <CardContent>
         <form onSubmit={handleLogin} className="flex flex-col gap-6">
           <div className="grid gap-2">
-            <Label htmlFor="email">Email</Label>
             <Input
+              id="email"
               type="email"
-              placeholder="email"
+              placeholder="И-мэйл"
+              autoComplete="email"
               required
+              disabled={isLoading}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
+ 
           <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
             <Input
+              id="password"
               type="password"
-              placeholder="password"
+              placeholder="Нууц үг"
+              autoComplete="current-password"
               required
+              disabled={isLoading}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-
-          <Button type="submit" className="w-full bg-[#00AC94]">
-            login
+ 
+          {error && (
+            <p role="alert" className="text-sm text-destructive">
+              {error}
+            </p>
+          )}
+ 
+          <Button
+            type="submit"
+            className="w-full bg-[#00AC94] hover:bg-[#00AC94]/90"
+            disabled={isLoading}
+          >
+            {isLoading ? "Нэвтэрч байна..." : "Нэвтрэх"}
           </Button>
         </form>
       </CardContent>

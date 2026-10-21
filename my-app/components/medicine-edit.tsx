@@ -24,6 +24,7 @@ import {
 } from "@/ascents/constans";
 import { Textarea } from "./ui/textarea";
 import { DoseUsageEditor } from "./doseUsage-edit";
+import { DoseUsageInputs } from "./dose-usage-inputs";
 
 export default function EditButton({ medicine }: EditButtonProps) {
   const [open, setOpen] = useState(false);
@@ -277,7 +278,7 @@ export default function EditButton({ medicine }: EditButtonProps) {
                   </div>
                 </div>
 
-                <DoseUsageEditor value={doseUsage} onChange={setDoseUsage} />
+                <DoseUsageInputs value={doseUsage} onChange={setDoseUsage} />
               </div>
             </div>
 

@@ -1,4 +1,3 @@
-// components/dose-usage-table.tsx
 import React from "react";
 import {
   Table,
@@ -32,7 +31,10 @@ export function DoseUsageTable({ invoices }: Props) {
           {invoices.map((disease, dIndex) => (
             <React.Fragment key={dIndex}>
               <TableRow>
-                <TableCell colSpan={3} className="font-bold text-lg">
+                <TableCell
+                  colSpan={3}
+                  className="font-bold text-lg wrap-break-word whitespace-normal"
+                >
                   {disease.diseaseName}
                 </TableCell>
               </TableRow>
@@ -47,13 +49,13 @@ export function DoseUsageTable({ invoices }: Props) {
 
                   {stage.rows.map((row, rIndex) => (
                     <TableRow key={rIndex}>
-                      <TableCell className="break-all whitespace-normal">
+                      <TableCell className="wrap-break-word whitespace-normal">
                         {row.age}
                       </TableCell>
-                      <TableCell className="break-all whitespace-normal">
+                      <TableCell className="wrap-break-word whitespace-normal">
                         {row.dose}
                       </TableCell>
-                      <TableCell className="break-all whitespace-normal">
+                      <TableCell className="wrap-break-word whitespace-normal">
                         {row.useTime}
                       </TableCell>
                     </TableRow>

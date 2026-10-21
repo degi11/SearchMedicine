@@ -28,7 +28,8 @@ export function DoseUsageEditor({ value, onChange }: Props) {
             placeholder="Өвчний нэр"
             onChange={(e) =>
               update(v => {
-                v[dIndex].diseaseName = e.target.value;
+                v[dIndex].diseaseName = e.target.
+                value;
               })
             }
           />

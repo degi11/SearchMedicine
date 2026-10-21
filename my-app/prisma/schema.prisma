@@ -30,9 +30,13 @@ model Medicine {
   storageConditions              String?
   imageUrl                       String?
   imagePublicId                  String?
+
+  @@index([tradeNameMN])
+  @@index([tradeNameEN])
+  @@index([barcode])
 }
 
-model user {
+model User {
   id        String   @id @default(uuid())
   email     String   @unique
   password  String

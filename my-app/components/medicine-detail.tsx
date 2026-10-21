@@ -149,14 +149,12 @@ export default function MedicineDetail({ id }: { id: string }) {
                     )}
                   </div>
                 </div>
-              )
+              ),
             )}
           </div>
         );
       case "Хэрэглэх арга тун":
-        return (
-          <DoseUsageTable invoices={medicine.doseUsage}/>
-        );
+        return <DoseUsageTable invoices={medicine.doseUsage} />;
       default:
         return null;
     }
@@ -177,7 +175,7 @@ export default function MedicineDetail({ id }: { id: string }) {
             <Image
               src={`${medicine.imageUrl.replace(
                 "/upload/",
-                "/upload/q_100,f_auto/"
+                "/upload/q_100,f_auto/",
               )}`}
               alt={medicine.tradeNameEN}
               fill

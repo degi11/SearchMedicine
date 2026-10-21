@@ -18,21 +18,24 @@ export default function MedicineCard({
   imageUrl,
 }: MedicineCardProrps) {
   const router = useRouter();
-  const { addToCart, isInCart } = useCart();
+  const { addToCart, removeFromCart, isInCart } = useCart();
 
   const alreadyInCart = isInCart(id ?? "");
 
-  const handleAdd = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (alreadyInCart) return;
+const handleAdd = (e: React.MouseEvent) => {
+  e.stopPropagation();
 
+  if (alreadyInCart) {
+    removeFromCart(id ?? "");
+  } else {
     addToCart({
       id: id ?? "",
       name: medicineName ?? "",
       storageCo: storageConditions ?? "",
       quantity: 1,
     });
-  };
+  }
+};
 
   return (
     <div
@@ -40,7 +43,7 @@ export default function MedicineCard({
       className="flex flex-col rounded-2xl w-full h-auto bg-white overflow-hidden shadow-sm hover:shadow-lg transition-all duration-200 cursor-pointer border border-gray-100 hover:border-green-200 group"
     >
       <div className="relative h-48 overflow-hidden bg-linear-to-br from-green-50 to-blue-50">
-        {imageUrl ? (
+        {imageUrl ? ( 
           <Image
             src={imageUrl}
             alt={medicineName || "Medicine image"}
@@ -62,7 +65,6 @@ export default function MedicineCard({
 
         <button
           onClick={handleAdd}
-          disabled={alreadyInCart}
           className="absolute top-3 left-3 bg-[#00AC94] text-white w-9 h-9 rounded-2xl flex items-center justify-center transition-all duration-200"
         >
           {alreadyInCart ? (

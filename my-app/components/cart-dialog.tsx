@@ -23,8 +23,12 @@ import {
 export default function CartDialog() {
   const { cart, removeFromCart } = useCart();
 
-  const [open, setOpen] = React.useState(false);
-  const [openTwo, setOpenTwo] = React.useState(false);
+  const [dosePopoverForId, setDosePopoverForId] = React.useState<string | null>(
+    null,
+  );
+  const [howToPopoverForId, setHowToPopoverForId] = React.useState<
+    string | null
+  >(null);
 
   const [inputs, setInputs] = useState<{
     [key: string]: {
@@ -72,7 +76,12 @@ export default function CartDialog() {
                 <p className="font-semibold text-xl no-print">{el.name}</p>
                 <div className="w-full flex flex-col gap-2 text-sm">
                   
-                  <Popover open={openTwo} onOpenChange={setOpenTwo}>
+                  <Popover
+                    open={dosePopoverForId === el.id}
+                    onOpenChange={(next) =>
+                      setDosePopoverForId(next ? el.id : null)
+                    }
+                  >
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
@@ -91,7 +100,7 @@ export default function CartDialog() {
                                 value={item}
                                 onSelect={(value) => {
                                   handleInputChange(el.id, "doseType", value);
-                                  setOpenTwo(false);
+                                  setDosePopoverForId(null);
                                 }}
                                 className="cursor-pointer border-b border-black py-2 rounded-none"
                               >
@@ -106,7 +115,12 @@ export default function CartDialog() {
 
 
 
-                  <Popover open={open} onOpenChange={setOpen}>
+                  <Popover
+                    open={howToPopoverForId === el.id}
+                    onOpenChange={(next) =>
+                      setHowToPopoverForId(next ? el.id : null)
+                    }
+                  >
                     <PopoverTrigger asChild>
                       <Button
                         variant="outline"
@@ -125,7 +139,7 @@ export default function CartDialog() {
                                 value={item}
                                 onSelect={(value) => {
                                   handleInputChange(el.id, "howToUse", value);
-                                  setOpen(false);
+                                  setHowToPopoverForId(null);
                                 }}
                                 className="cursor-pointer border-b border-black p-2 rounded-none"
                               >

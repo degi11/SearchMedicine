@@ -6,48 +6,55 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
 
     const q = searchParams.get("q")?.trim();
-    const barcodeParam = searchParams.get("barcode")?.trim();
+    const barcode = searchParams.get("barcode")?.trim();
 
-    let barcodeString: string | undefined;
-
-    if (barcodeParam && barcodeParam !== "") {
-      barcodeString = barcodeParam;
+    if (!q && !barcode) {
+      return NextResponse.json([]);
     }
 
-    const where: any = { OR: [] };
+    let medicines;
 
-    if (q) {
-      where.OR.push({
-        OR: [
-          { tradeNameMN: { contains: q, mode: "insensitive" } },
-          { tradeNameEN: { contains: q, mode: "insensitive" } },
-        ],
+    if (barcode) {
+      medicines = await prisma.medicine.findMany({
+        where: { barcode },
+        select: {
+          id: true,
+          tradeNameMN: true,
+          tradeNameEN: true,
+          dosage: true,
+          no: true,
+          dosageForm: true,
+          registered: true,
+          country: true,
+          storageConditions: true,
+          imageUrl: true,
+        },
+        take: 30,
+      });
+    } else {
+      medicines = await prisma.medicine.findMany({
+        where: {
+          OR: [
+            { tradeNameMN: { contains: q!, mode: "insensitive" } },
+            { tradeNameEN: { contains: q!, mode: "insensitive" } },
+          ],
+        },
+        select: {
+          id: true,
+          tradeNameMN: true,
+          tradeNameEN: true,
+          dosage: true,
+          no: true,
+          dosageForm: true,
+          registered: true,
+          country: true,
+          storageConditions: true,
+          imageUrl: true,
+        },
+        take: 30,
+        orderBy: { createdAt: "desc" },
       });
     }
-
-    if (barcodeString) {
-      where.OR.push({ barcode: barcodeString });
-    }
-
-    if (!where.OR.length) return NextResponse.json([]);
-
-    const medicines = await prisma.medicine.findMany({
-      where,
-      select: {
-        id: true,
-        tradeNameMN: true,
-        tradeNameEN: true,
-        dosage: true,
-        no: true,
-        dosageForm: true,
-        registered: true,
-        country: true,
-        storageConditions: true,
-        imageUrl: true,
-      },
-      take: 50,
-      orderBy: { createdAt: "desc" },
-    });
 
     return NextResponse.json(medicines);
   } catch (err) {
